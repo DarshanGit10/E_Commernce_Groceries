@@ -1,7 +1,8 @@
+require('dotenv').config();
+
 // DB Connection File
 const mongoose = require('mongoose');
-
-const connectionUrl = 'mongodb+srv://groceriesAdmin:r1QKwi7LMnEihUns@cluster0.focfaof.mongodb.net/eGroceries?retryWrites=true&w=majority'
+const connectionUrl = process.env.DB_CONNECTION
 
 async function connectToMongo() {
   try {

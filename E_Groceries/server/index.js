@@ -1,18 +1,25 @@
-const http = require('http');
-
+// DB Connection
 const connectToMongo = require('./db')
 connectToMongo()
 
-const hostname = '127.0.0.1';
-const port = 6000;
+// Import 
+const express =  require('express');
+const app = express();
+require('dotenv').config();
+
+
 // Middleware
+app.use(express.json());
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
+app.get('/', (req, res) =>{
+  res.send('Welcome')
+})
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// Routes
+app.use('/api', require('./routes/authentication'))
+
+// Listening to port
+const port = process.env.PORT || 8000
+app.listen(port, () => {
+    console.log(`Example app listening on port http://localhost:${port}`)
+})
