@@ -6,7 +6,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 // Route1
-// SignUp Form
+// SignUp
+
+const commonPasswords = ["password", "123456", "qwerty", "abc123"];
 router.post(
   "/create_user",
   [
@@ -16,10 +18,27 @@ router.post(
       "Enter a Valid first name min length required 3"
     ).isLength(3),
     body("lastName", "Last name cannot be empty").isLength(1),
-    body("email", "Enter a Valid Email id").isEmail(),
-    body("password", "Enter a Valid password min length required 5").isLength({
-      min: 5,
-    }),
+    body("email")
+      .isEmail()
+      .withMessage("Enter a valid email address")
+      .custom((value) => {
+        if (!value.endsWith("@gmail.com")) {
+          throw new Error("Email address must be a valid Gmail address");
+        }
+        return true;
+      }),
+    body("password")
+      .isLength({ min: 8 })
+      .withMessage("Password must be at least 8 characters long")
+      .matches(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/
+      )
+      .withMessage(
+        "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character"
+      )
+      .not()
+      .isIn(commonPasswords)
+      .withMessage("Password is too common"),
     body(
       "phoneNumber",
       "Enter a Valid Phone Number length should be 10"
@@ -50,7 +69,8 @@ router.post(
         email,
         phoneNumber,
       });
-      res.json({ user });
+      res.send("User sign up successful");
+      // res.json({ user });
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "Internal Server Error" });
@@ -64,7 +84,15 @@ router.post(
   "/login_user",
   // Data Validations
   [
-    body("email", "Enter a Valid Email id").isEmail(),
+    body("email")
+      .isEmail()
+      .withMessage("Enter a valid email address")
+      .custom((value) => {
+        if (!value.endsWith("@gmail.com")) {
+          throw new Error("Email address must be a valid Gmail address");
+        }
+        return true;
+      }),
     body("password", "Password cannot be empty").exists(),
   ],
   async (req, res) => {
@@ -86,18 +114,28 @@ router.post(
       // Compare password
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
-        return res
-          .status(400)
-          .json({
-            error: "Please try to login using correct credentials !!!",
-          });
+        return res.status(400).json({
+          error: "Please try to login using correct credentials !!!",
+        });
       }
-      return res.status(200).json({ user });
+      //   Json Web Token
+      //  Payload
+      const data = {
+        user: {
+          id: user._id,
+        },
+      };
+      const authToken = jwt.sign(data, process.env.JWT_SECRET_KEY);
+      res.json({ authToken });
+      // return res.status(200).json({ user });
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
+
+
+
 
 module.exports = router;
