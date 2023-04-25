@@ -45,6 +45,7 @@ router.post(
     ).isLength({ min: 10, max: 10 }),
   ],
   async (req, res) => {
+    let success = false
     // If errors, return bad req and errors (Email Id Unique)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,7 +70,9 @@ router.post(
         email,
         phoneNumber,
       });
-      res.send("User sign up successful");
+      success= true
+      res.status(200).json({success, message: "User registered successfully" });
+
       // res.json({ user });
     } catch (err) {
       console.log(err);
@@ -96,6 +99,7 @@ router.post(
     body("password", "Password cannot be empty").exists(),
   ],
   async (req, res) => {
+    let success = false
     // If errors, return bad req and errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -126,7 +130,8 @@ router.post(
         },
       };
       const authToken = jwt.sign(data, process.env.JWT_SECRET_KEY);
-      res.json({ authToken });
+      success = true
+      res.json({success,  authToken });
       // return res.status(200).json({ user });
     } catch (err) {
       console.log(err);
