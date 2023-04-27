@@ -1,0 +1,23 @@
+.profile-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .profile-name {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  
+  .profile-info {
+    margin-top: 20px;
+  }
+  
+  .profile-info p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  

@@ -4,9 +4,10 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const FetchUser = require('../Middleware/FetchUser')
 
-// Route1
-// SignUp
+// Route 1
+// SignUp using POST method /api/create_user
 
 const commonPasswords = ["password", "123456", "qwerty", "abc123"];
 router.post(
@@ -46,7 +47,7 @@ router.post(
   ],
   async (req, res) => {
     let success = false
-    // If errors, return bad req and errors (Email Id Unique)
+    // If errors, return bad request with errors 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -82,7 +83,7 @@ router.post(
 );
 
 // Route 2
-// Login
+// Login using POST method /api/login_user
 router.post(
   "/login_user",
   // Data Validations
@@ -100,7 +101,7 @@ router.post(
   ],
   async (req, res) => {
     let success = false
-    // If errors, return bad req and errors
+    // If errors, return bad req with errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -122,16 +123,16 @@ router.post(
           error: "Please try to login using correct credentials !!!",
         });
       }
-      //   Json Web Token
-      //  Payload
       const data = {
         user: {
           id: user._id,
         },
+        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 6) // token will expire in 6 hours
       };
       const authToken = jwt.sign(data, process.env.JWT_SECRET_KEY);
       success = true
-      res.json({success,  authToken });
+      res.json({success, authToken });
+      
       // return res.status(200).json({ user });
     } catch (err) {
       console.log(err);
@@ -140,6 +141,21 @@ router.post(
   }
 );
 
+
+// Route 3
+// Get User details /api/auth/getUser POST method
+
+router.get('/get_user', FetchUser,  async (req, res) => {
+
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
+    res.send(user)
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+})
 
 
 

@@ -1,5 +1,6 @@
+import './login.css'
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -8,11 +9,10 @@ const Login = () => {
     email: "",
     password: "",
   });
-  //   console.log(data)
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // form submission logic here
     const response = await fetch("http://localhost:8089/api/login_user", {
       method: "POST",
       headers: {
@@ -24,52 +24,68 @@ const Login = () => {
       }),
     });
     const resData = await response.json();
-    console.log(resData);
     if (resData.success) {
       localStorage.setItem("User:Token", resData.authToken);
-      console.log("Account Logged in Successfully ");
+      setMessage("Account logged in successfully!");
       setTimeout(() => {
         navigate("/");
-      }, 500);
+      }, 1500);
     } else {
-      console.log("Invalid !!!");
+      setMessage("Invalid credentials!");
     }
-
-    // if(resData === 'User registered successfully'){
-    //     alert("User created successfully.");
-    //     // setTimeout(() => {
-    //     //     navigate("/users/login");
-    //     //   }, 1500);
-    // }
   };
 
   const handleInputChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
+
   return (
-    <form className="signup-form" onSubmit={handleSubmit}>
-      <label className="signup-label">
-        Email:
-        <input
-          type="email"
-          name="email"
-          onChange={handleInputChange}
-          className="signup-input"
-        />
-      </label>
-      <label className="signup-label">
-        Password:
-        <input
-          type="password"
-          name="password"
-          onChange={handleInputChange}
-          className="signup-input"
-        />
-      </label>
-      <button type="submit" className="signup-button">
-        Login
-      </button>
-    </form>
+    <div className="formContainer">
+      <div className="formCenter">
+        <form className="formFields" onSubmit={handleSubmit}>
+          <div className="loginFormField">
+            <>
+            <Link to="/">
+              <img src={require('../../assets/logo2.png')} alt="Logo" className="logoImgLogin" />
+            </Link>
+            </>
+            <h2 className="formHeader">LOGIN</h2>
+            <label className="formFieldLabel">E-MAIL ADDRESS:</label>
+            <input
+              type="email"
+              name="email"
+              onChange={handleInputChange}
+              className="formFieldInput"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div className="loginFormField">
+            <label className="formFieldLabel">PASSWORD:</label>
+            <input
+              type="password"
+              name="password"
+              onChange={handleInputChange}
+              className="formFieldInput"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <div className="loginFormField">
+            <button type="submit" className="formFieldButton">
+              Login
+            </button>
+            <Link to="/signup" className="formFieldLink">
+              Create an account
+            </Link> 
+            <div className="formMessage">
+            <p>{message}</p>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

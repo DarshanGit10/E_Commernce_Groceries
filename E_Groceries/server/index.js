@@ -5,9 +5,11 @@ connectToMongo()
 // Import 
 const express =  require('express');
 const app = express();
+
+// Config File 
 require('dotenv').config();
 
-
+// Cross-origin resource sharing policy
 const cors = require('cors')
 app.use(cors());
 
