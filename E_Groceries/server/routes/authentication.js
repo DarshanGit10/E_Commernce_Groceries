@@ -4,7 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const FetchUser = require('../Middleware/FetchUser')
+
 
 // Route 1
 // SignUp using POST method /api/create_user
@@ -140,22 +140,6 @@ router.post(
     }
   }
 );
-
-
-// Route 3
-// Get User details /api/auth/getUser POST method
-
-router.get('/get_user', FetchUser,  async (req, res) => {
-
-  try {
-    const userId = req.user.id;
-    const user = await User.findById(userId).select("-password")
-    res.send(user)
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-  }
-})
 
 
 

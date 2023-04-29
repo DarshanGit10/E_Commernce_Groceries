@@ -1,23 +1,134 @@
+/* Profile container */
+.profileContainer {
+  position: relative;
+  top: 75px;
+  left: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  width: 500px
+}
+
 .profile-card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin-top: 20px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .profile-name {
-    font-size: 32px;
-    margin-bottom: 10px;
-  }
-  
-  .profile-info {
-    margin-top: 20px;
-  }
-  
-  .profile-info p {
-    font-size: 16px;
-    margin: 5px 0;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 400px;
+  height: 200px;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+  text-align: center;
+}
+
+
+/* Address container */
+.addressContainer {
+  position: absolute;
+  top: 55px;
+  left: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  width: 700px;
+}
+
+.address-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 625px;
+}
+
+.address-info {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Add Address form */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+
+.form-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 500px;
+}
+
+.form-input {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.form-input label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-input input {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form-input select {
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;  
+}
+
+th {
+  background-color: #f2f2f2;
+  color: #333;
+}

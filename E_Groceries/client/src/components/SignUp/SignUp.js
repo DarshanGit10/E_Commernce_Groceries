@@ -1,8 +1,20 @@
 import React, { useState } from "react";
 import "./signup.css";
 import { useNavigate, Link } from "react-router-dom";
+import Alert from "../Alert";
 
 const SignUp = () => {
+  const [alert, setAlert] = useState(null);
+  function showAlert(message, type) {
+    setAlert({
+      msg: message,
+      ty: type,
+    });
+
+    setTimeout(() => {
+      setAlert(null);
+    }, 4000);
+  }
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
@@ -50,9 +62,7 @@ const SignUp = () => {
     });
     const resData = await response.json();
     if (resData.error === "Enter a unique Email Id") {
-      setErrors({});
-      setSuccessMessage("");
-      setErrors({ email: "User already exists, please try login" });
+      showAlert("User already exists, please try login ", "warning");
     } else if (resData.errors) {
       setSuccessMessage("");
       setErrors({});
@@ -96,7 +106,11 @@ const SignUp = () => {
 
   return (
     <div className="formContainer">
-      <div className="formCenter scroll">
+      <div className="alertPosition">
+        <Alert alert={alert} />
+        {/* Alert Text !!!! */}
+      </div>
+      <div className="formCenterSign scroll">
         <form onSubmit={handleSubmit} className="formFields">
           <>
             <Link to="/">

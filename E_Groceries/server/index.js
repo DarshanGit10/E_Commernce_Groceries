@@ -22,6 +22,8 @@ app.get('/', (req, res) =>{
 
 // Routes
 app.use('/api', require('./routes/authentication'))
+app.use('/api', require('./routes/user'))
+app.use('/api', require('./routes/address'))
 
 // Listening to port
 const port = process.env.PORT || 8000

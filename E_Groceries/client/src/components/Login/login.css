@@ -10,6 +10,7 @@
 }
 
 .formContainer {
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,6 +22,7 @@
   }
 
   .formCenter {
+    margin-top: 50px;
     width: 40%;
     background-color: #0f1725b8;
     padding: 25px 40px;
