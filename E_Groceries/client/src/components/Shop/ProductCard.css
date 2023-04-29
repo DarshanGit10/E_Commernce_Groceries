@@ -1,0 +1,82 @@
+.product-card {
+    /* Set a fixed width for each card */
+    width: 300px;
+    /* Add margin to create some spacing between cards */
+    margin: 10px;
+    /* Add flex to display the cards in a row */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    /* Add a border and padding to the card */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Override the width of the card image to fit the card */
+  .product-image img {
+    max-width: 100%;
+    max-height: 150px;
+  }
+  
+  /* Add flex to display the card details in a column */
+  .product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Add a margin to the card title */
+  .product-details h3 {
+    font-size: 18px;
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  /* Add a margin to the card description */
+  .product-details p {
+    font-size: 14px;
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  /* Add flex to display the card info in a row */
+  .product-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  /* Add margin to the card info items */
+  .product-price,
+  .product-quantity,
+  .product-count {
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .product-container{
+    position: relative;
+    top: 70px;
+    left: 70px
+  }
+
+  .cart-image img{
+    width: 33px;
+    height: 30px;
+    cursor: pointer;
+    position: relative;
+   
+    left: 100px;
+  }
+
+  .alertPositionProduct{
+    position: fixed;
+    left:50px;
+   top: 63px;
+  }

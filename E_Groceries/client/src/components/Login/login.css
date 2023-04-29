@@ -1,104 +1,101 @@
-
-.logoImgLogin{
+.logoImgLogin {
   display: flex;
   margin: 15px auto;
   height: 50px;
   border-radius: 20px;
 }
-.formHeader{
-    color: #eef1f6;
+.formHeader {
+  color: #eef1f6;
 }
 
 .formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 93vh; /* set the height of the container to the full height of the viewport */
+  background-image: url("../../assets/loginSignup.jpg");
+  background-size: cover;
+  background-position: center;
+}
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* set the height of the container to the full height of the viewport */
-    background-image: url('../../assets/loginSignup.jpg');
-    background-size: cover;
-    background-position: center;
-  }
+.formCenter {
+  margin-top: 50px;
+  width: 40%;
+  background-color: #0f1725b8;
+  padding: 25px 40px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  border-radius: 35px;
+  height: 85%;
+}
 
-  .formCenter {
-    margin-top: 50px;
-    width: 40%;
-    background-color: #0f1725b8;
-    padding: 25px 40px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    overflow: auto;
-    border-radius: 35px;
-    height: 85%;
-  }
-  
-  .formField {
-    margin-bottom: 10px;
-  }
+.formField {
+  margin-bottom: 10px;
+}
 
-  .loginFormField{
-    margin-bottom: 40px;
-  }
-  
-  .formFieldLabel {
-    display: block;
-    text-transform: uppercase;
-    font-size: 0.9em;
-    color: #eef1f6;
-    font-weight: 900;
-  }
-  .formFieldInput {
-    width: 85%;
-    background-color: transparent !important;
-    border: none;
-    color: #cce184 !important;
-    outline: none;
-    border-bottom: 1px solid #dadfcc;
-    font-size: 0.8em;
-    font-weight: 500;
-    padding-bottom: 10px;
-    margin-top: 10px;
+.loginFormField {
+  margin-bottom: 40px;
+}
 
-  }
-  
-  .formFieldInput::placeholder {
-    color: #cce184;
-  }
-  
-  .formFieldButton {
-    background-color: #d3e1e2;
-    color: #407c87;
-    border: none;
-    outline: none;
-    border-radius: 25px;
-    padding: 12px 70px;
-    font-size: 1em;
-    font-weight: 500;
-  }
+.formFieldLabel {
+  display: block;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  color: #eef1f6;
+  font-weight: 900;
+}
+.formFieldInput {
+  width: 85%;
+  background-color: transparent !important;
+  border: none;
+  color: #cce184 !important;
+  outline: none;
+  border-bottom: 1px solid #dadfcc;
+  font-size: 0.8em;
+  font-weight: 500;
+  padding-bottom: 10px;
+  margin-top: 10px;
+}
 
-  .formFieldButton:hover {
-    background-color: #eef1f6;
-    color: #407c87;
-    border: 2px solid #407c87 ;
+.formFieldInput::placeholder {
+  color: #cce184;
+}
 
-    outline: none;
-    border-radius: 25px;
-    padding: 12px 70px;
-    font-size: 1em;
-    font-weight: 500;
-  }
-  
-  .formFieldLink {
-    color: #cce184;
-    text-decoration: none;
-    display: inline-block;
-    border-bottom: 1.5px solid #d3e1e2;
-    padding-bottom: 5px;
-    margin: 20px;
-  }
-  
-  .formMessage{
-    margin-left: 20px;
-    color: rgba(243, 222, 208, 0.788);
-    font-weight: 800;
-  }
+.formFieldButton {
+  background-color: #d3e1e2;
+  color: #407c87;
+  border: none;
+  outline: none;
+  border-radius: 25px;
+  padding: 12px 70px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.formFieldButton:hover {
+  background-color: #eef1f6;
+  color: #407c87;
+  border: 2px solid #407c87;
+
+  outline: none;
+  border-radius: 25px;
+  padding: 12px 70px;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.formFieldLink {
+  color: #cce184;
+  text-decoration: none;
+  display: inline-block;
+  border-bottom: 1.5px solid #d3e1e2;
+  padding-bottom: 5px;
+  margin: 20px;
+}
+
+.formMessage {
+  margin-left: 20px;
+  color: rgba(243, 222, 208, 0.788);
+  font-weight: 800;
+}

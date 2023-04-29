@@ -7,7 +7,7 @@ export default function Alert(props) {
   }
   return (
     <>
-      <div style={{ height: '50px' }}>
+      <div style={{ height: '30px' }}>
         {props.alert && props.alert.ty !== null ? (
           <div className={`alert alert-${props.alert.ty} alert-dismissible fade show`} role="alert" >
             <strong>{capitalize(props.alert.ty)}</strong>: {props.alert.msg}

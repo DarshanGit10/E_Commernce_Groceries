@@ -58,6 +58,7 @@ const AddressForm = ({fetchUserAddress}) => {
                   <input
                     type="text"
                     id="street"
+                    className='textCSS'
                     name="street"
                     value={address.street}
                     onChange={handleInputChange}
@@ -67,6 +68,7 @@ const AddressForm = ({fetchUserAddress}) => {
                   <label htmlFor="city">City:</label>
                   <input
                     type="text"
+                    className='textCSS'
                     id="city"
                     name="city"
                     value={address.city}
@@ -79,6 +81,7 @@ const AddressForm = ({fetchUserAddress}) => {
                   <label htmlFor="state">State:</label>
                   <input
                     type="text"
+                    className='textCSS'
                     id="state"
                     name="state"
                     value={address.state}
@@ -89,6 +92,7 @@ const AddressForm = ({fetchUserAddress}) => {
                   <label htmlFor="zipCode">Zip Code:</label>
                   <input
                     type="text"
+                    className='textCSS'
                     id="zipCode"
                     name="zipCode"
                     value={address.zipCode}

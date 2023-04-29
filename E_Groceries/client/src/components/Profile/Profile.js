@@ -4,7 +4,7 @@ import AddressForm from "../Address/AddressForm";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const [userAddress, setUserAddress] = useState(null);
+  const [userAddress, setUserAddress] = useState([]);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
   
 
@@ -88,17 +88,21 @@ const Profile = () => {
               </tr>
             </thead>
             <tbody>
-              {userAddress.map((address, index) => (
-                <tr key={address._id}>
-                  <td>{index + 1}</td>
-                  <td>{address.street}</td>
-                  <td>{address.city}</td>
-                  <td>{address.state}</td>
-                  <td>{address.zipCode}</td>
-                  <td>{address.country}</td>
-                </tr>
-              ))}
-            </tbody>
+  {userAddress && userAddress.length > 0 ? userAddress.map((address, index) => (
+    <tr key={address._id}>
+      <td>{index + 1}</td>
+      <td>{address.street}</td>
+      <td>{address.city}</td>
+      <td>{address.state}</td>
+      <td>{address.zipCode}</td>
+      <td>{address.country}</td>
+    </tr>
+  )) : (
+    <tr>
+      <td colSpan="6">No addresses found</td>
+    </tr>
+  )}
+</tbody>
           </table>
         ) : (
           <p>Loading...</p>
