@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   let navigate = useNavigate();
-
+ 
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -13,27 +13,40 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("http://localhost:8089/api/login_user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-    });
-    const resData = await response.json();
-    if (resData.success) {
-      localStorage.setItem("User:Token", resData.authToken);
-      setMessage("Account logged in successfully!");
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
-    } else {
-      setMessage("Invalid credentials!");
+    try {
+      const response = await fetch("http://localhost:8089/api/login_user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
+      });
+      const resData = await response.json();
+      if (resData.success) {
+        const expirationTime = new Date().getTime() + 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+        const creationTime = new Date().getTime(); // current time in milliseconds
+        localStorage.setItem("User:Token", resData.token);
+        localStorage.setItem("User:TokenExpiration", expirationTime.toString());
+        localStorage.setItem("User:TokenCreation", creationTime.toString());
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else {
+        setMessage("Invalid credentials!");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again later.");
     }
   };
+  
+  // const authToken = localStorage.getItem("User:Token");
+  // const expirationTime = localStorage.getItem("User:TokenExpiration");
+  // if (!authToken || !expirationTime || new Date().getTime() > +expirationTime) {
+  //   navigate("/login");
+  // }
 
   const handleInputChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });

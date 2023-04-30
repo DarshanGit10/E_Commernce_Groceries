@@ -140,3 +140,14 @@ margin-top: 0px;
   height: 35px;
   cursor: pointer;
 }
+
+.add-cart-image img{
+  margin-top: 5px;
+  width: 30px;
+  height: 28px;
+}
+
+.add-cart-image span{
+  font-size: 16px;
+  margin-left: 3px;
+}

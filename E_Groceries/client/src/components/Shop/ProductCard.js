@@ -2,8 +2,13 @@ import React, {useState} from 'react';
 import './ProductCard.css'
 import {useNavigate} from 'react-router-dom'
 import Alert from "../Alert";
+import { useCart } from '../../context/cart';
+
+
 const ProductCard = ({ name, description, photo, price, quantity, count }) => {
   const [alert, setAlert] = useState(null);
+  const [cart, setCart] = useCart()
+
   function showAlert(message, type) {
     setAlert({
       msg: message,
@@ -16,6 +21,7 @@ const ProductCard = ({ name, description, photo, price, quantity, count }) => {
   }
 
   const navigate = useNavigate()
+
   const handleCartClick = (event) =>{
     event.preventDefault();
     const token = localStorage.getItem('User:Token');
@@ -25,6 +31,18 @@ const ProductCard = ({ name, description, photo, price, quantity, count }) => {
           navigate('/login')
       }, 4000);
     }
+    else{
+      setCart((prevCart) => {
+        // Add the current product to the cart
+        const updatedCart = [...prevCart, { name, description, photo, price, quantity, count }];
+        // Save the updated cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+        // Return the updated cart to set it in the state
+        return updatedCart;
+      });
+      showAlert("Item added to cart ", "success");
+    }
+    
   }
 
 

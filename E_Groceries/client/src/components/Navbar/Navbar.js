@@ -1,11 +1,17 @@
 import React from "react";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import "./navbar.css";
+import { useCart } from "../../context/cart";
+import {Badge} from 'antd'
 
 const Navbar = () => {
+  const [cart] = useCart();
+
   let navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("User:Token");
+    localStorage.removeItem("User:TokenExpiration");
+    localStorage.removeItem("User:TokenCreation");
     navigate("/");
   };
 
@@ -66,6 +72,15 @@ const Navbar = () => {
                     className="imgAvatar"
                     onClick={handleProfile}
                   />
+                  <li className="nav-item" style={{listStyle:"none"}}>
+                    <div className="add-cart-image">
+                      <Badge count={cart?.length} showZero>
+                      <NavLink to="/cartPage" className="nav-link">
+                        <img src={require("../../assets/add-cart.png")} alt="Cart" />
+                      </NavLink>
+                      </Badge>
+                    </div>
+                  </li>
                 </>
               )}
             </div>

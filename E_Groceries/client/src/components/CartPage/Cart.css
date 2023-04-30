@@ -1,0 +1,31 @@
+.cartContainer{
+    margin-top: 65px;
+}
+
+.cart-container{
+    text-align: center;
+    padding: 2px;
+    background-color: burlywood;
+}
+
+.cartRemoveBtn{
+    margin-top: 10px;
+}
+
+.cartRemoveBtn button{
+    border: 1px solid black;
+    border-radius: 14px;
+    background-color: #cce1848a;
+    width: 120px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cartRemoveBtn button:hover{
+    border: 1px solid black;
+    border-radius: 14px;
+    background-color: #f6f7f68a;
+    width: 120px;
+    font-weight: bold;
+    font-size: 16px;
+}

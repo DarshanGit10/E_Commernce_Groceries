@@ -61,8 +61,11 @@ const SignUp = () => {
       }),
     });
     const resData = await response.json();
-    if (resData.error === "Enter a unique Email Id") {
+    if (resData.error === "User already exists.") {
       showAlert("User already exists, please try login ", "warning");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3500);
     } else if (resData.errors) {
       setSuccessMessage("");
       setErrors({});

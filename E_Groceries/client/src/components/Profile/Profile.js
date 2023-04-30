@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import AddressForm from "../Address/AddressForm";
+import Cart from "../CartPage/Cart";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -15,7 +16,7 @@ const Profile = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "auth-token": `${token}`,
+          "Authentication-Token": `${token}`,
         },
       });
       const resData = await response.json();
@@ -31,7 +32,7 @@ const Profile = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": `${token}`,
+        "Authentication-Token": `${token}`,
       },
     });
     const resData = await response.json();
@@ -109,7 +110,6 @@ const Profile = () => {
         )}
       </div>
     </div>
-      
     </>
   );
 };
