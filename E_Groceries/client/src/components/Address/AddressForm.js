@@ -22,7 +22,7 @@ const AddressForm = ({fetchUserAddress}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': `${token}`,
+        'Authentication-Token': `${token}`,
       },
       body: JSON.stringify({
         street: address.street,

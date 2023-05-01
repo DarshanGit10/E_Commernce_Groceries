@@ -68,6 +68,7 @@ const Profile = () => {
           </div>
           <button onClick={handleAddAddressClick} className="btn btn-color-2">Add Address</button>
           {showAddAddressForm && <AddressForm fetchUserAddress={fetchUserAddress}/>}
+          
         </div>
       ) : (
         <p>Loading...</p>

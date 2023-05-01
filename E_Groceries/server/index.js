@@ -25,6 +25,7 @@ app.use('/api', require('./routes/authentication'))
 app.use('/api', require('./routes/user'))
 app.use('/api', require('./routes/address'))
 app.use('/api/products', require('./routes/products'))
+app.use('/api/payment', require('./routes/payment'))
 
 // Listening to port
 const port = process.env.PORT || 8000

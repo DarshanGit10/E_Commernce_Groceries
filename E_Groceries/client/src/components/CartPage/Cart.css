@@ -22,10 +22,42 @@
 }
 
 .cartRemoveBtn button:hover{
+    background-color: #f6f7f68a;
+
+}
+
+.addressCartContainer{
+    margin-top: 20px;
+}
+
+.addressCartContainer select{
+    border: none;
+   border-radius: 10px;
+   padding: 2px 10px;
+   width: max-content;
+   font-weight: 350;
+   background-color: orange;
+}
+
+.addressCartContainer select:hover{
+   background-color: #cce1848a;
+   border: none;
+ }
+
+
+ .addressCartContainer button{
     border: 1px solid black;
     border-radius: 14px;
-    background-color: #f6f7f68a;
+    background-color: #cce1848a;
     width: 120px;
     font-weight: bold;
     font-size: 16px;
+}
+
+.addressCartContainer button:hover {
+    background-color: #f6f7f68a;
+}
+
+.addressCartContainer button Link{
+    color: black;
 }
