@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar/Navbar";
 import React from "react";
 import AddressForm from "./components/Address/AddressForm";
 import Cart from "./components/CartPage/Cart";
+import Order from "./components/Orders/Order";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route exact path="/shop" element={<Shop />} />
           <Route exact path="/addAddress" element={<AddressForm />} />
           <Route exact path="/cartPage" element={<Cart />} />
+          <Route exact path="/order" element={<Order />} />
         </Routes>
     </>
   );

@@ -1,4 +1,3 @@
-const User = require("../models/Users");
 const Address = require("../models/Address")
 const express = require("express");
 const router = express.Router();

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Cart.css";
 import { useCart } from "../../context/cart";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 import DropIn from "braintree-web-drop-in-react";
 
 const Cart = ({}) => {
@@ -38,32 +39,57 @@ const Cart = ({}) => {
   // Get payment gateway token
   const getToken = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8089/api/payment/brainTree/token",
-        {
-          method: "GET",
-        }
-      );
-      const {resData} = await response.json();
-      console.log(resData.clientToken);
-      setClientToken(resData?.clientToken);
+    const {data} = await axios.get("http://localhost:8089/api/payment/brainTree/token");
+    setClientToken(data?.clientToken)
+      
     } catch (error) {
-      console.log(error);
+      console.log("Error fetching client token:", error);
     }
   };
+  
+
+  
 
   useEffect(() => {
     getToken();
   }, []);
 
-  const handlePayment = async() => {
+  const handlePayment = async(event) => {
+    event.preventDefault();
     try {
-      // const {nonce} = await instance.requestPaymentMethod();
-      // const {}
+      // console.log("1")
+      setLoading(true);
+      const token = localStorage.getItem('User:Token');
+      const {nonce} = await instance.requestPaymentMethod();
+      const response = await fetch('http://localhost:8089/api/payment/brainTree/payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authentication-Token': `${token}`,
+        },
+        body: JSON.stringify({
+          nonce,
+          cart
+        })
+      });
+      const {ok} = await response.json();
+      // console.log("2")
+      setLoading(false);
+      // console.log("3")
+      setTimeout(() => {
+        localStorage.removeItem('cart')
+        setCart([])
+        navigate('/order')
+        alert('Payment Successfully Completed')
+      }, 3000);
+   
+      // console.log("4")
     } catch (error) {
       console.log(error);
+      setLoading(false);  
     }
   };
+  
 
   const removeItemFromCart = (index) => {
     try {
@@ -103,7 +129,7 @@ const Cart = ({}) => {
           <div className="md-col-12">
             <h1 className="text-center bg-light p-2 mb-1">Your Cart</h1>
             <h4 className="text-center">
-              {cart?.length > 1
+              {cart?.length > 0
                 ? `You Have ${cart.length} items in your cart`
                 : "Your cart is empty"}
             </h4>
@@ -167,7 +193,11 @@ const Cart = ({}) => {
             </div>
 
             <div className="mt-2">
-              <DropIn
+              {
+
+                !clientToken || !cart?.length ? ("") :
+                <>
+                <DropIn
                 options={{
                   authorization: clientToken,
                   paypal: {
@@ -176,14 +206,18 @@ const Cart = ({}) => {
                 }}
                 onInstance={(instance) => setInstance(instance)}
               />
-
               <button
-                className="btn btn-primary"
-                onClick={handlePayment}
-                disabled={!loading || !instance}
-              >
-                Make Payment
-              </button>
+              className="btn btn-primary"
+              onClick={handlePayment}
+              disabled={!instance}
+            >
+              {loading ? 'Processing... ' :'Make Payment'}
+            </button>
+            </>
+              }
+           
+
+           
             </div>
           </div>
         </div>

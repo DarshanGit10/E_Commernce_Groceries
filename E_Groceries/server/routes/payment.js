@@ -2,8 +2,9 @@ const brainTree = require("braintree");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const FetchUser = require("../Middleware/FetchUser");
+
 const Orders = require("../models/Orders");
+const FetchUser = require("../Middleware/FetchUser");
 
 
 
@@ -34,17 +35,25 @@ router.get("/brainTree/token", async (req, res) => {
 
 // Route 2, Payments
 router.post("/brainTree/payment", FetchUser, async (req, res) => {
+  
   try {
+    const { nonce, cart } = req.body;
+    let total = 0;
+    cart.map((i) => {
+      total += i.price;
+    });
+    const productIds = cart.map((i) => i._id);
     let newTransaction = gateway.transaction.sale(
       {
         amount: total,
         paymentMethodNonce: nonce,
         options: { submitForSettlement: true },
       },
+      
       function (error, result) {
         if(result){
             const order = new Orders({
-                products: cart,
+                products: productIds,
                 payment: result,
                 buyer: req.user.id
 

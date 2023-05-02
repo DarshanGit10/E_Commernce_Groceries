@@ -3,9 +3,11 @@ import './ProductCard.css'
 import {useNavigate} from 'react-router-dom'
 import Alert from "../Alert";
 import { useCart } from '../../context/cart';
+import mongoose from 'mongoose';
 
 
-const ProductCard = ({ name, description, photo, price, quantity, count }) => {
+
+const ProductCard = ({ name, description, photo, price, quantity, count, _id }) => {
   const [alert, setAlert] = useState(null);
   const [cart, setCart] = useCart()
 
@@ -34,7 +36,7 @@ const ProductCard = ({ name, description, photo, price, quantity, count }) => {
     else{
       setCart((prevCart) => {
         // Add the current product to the cart
-        const updatedCart = [...prevCart, { name, description, photo, price, quantity, count }];
+        const updatedCart = [...prevCart, { _id, name, description, photo, price, quantity, count }];
         // Save the updated cart to localStorage
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         // Return the updated cart to set it in the state

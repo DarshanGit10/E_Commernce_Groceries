@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const ordersSchema = new mongoose.Schema({
-  products: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Products',
-  }],
+
   payment: {},
   buyer:{
     type: mongoose.Schema.Types.ObjectId,
@@ -14,7 +11,12 @@ const ordersSchema = new mongoose.Schema({
     type: String,
     default: 'Not Process',
     enum: ['Not Process', 'Processing', 'Shipped', 'Delivered', 'Cancel']
-  }
+  },
+  products: [{
+    type: String
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: 'Products',
+  }],
 }, 
 {timestamps:true});
 
