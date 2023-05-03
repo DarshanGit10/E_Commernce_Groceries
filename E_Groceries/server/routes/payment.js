@@ -53,7 +53,7 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
       function (error, result) {
         if(result){
             const order = new Orders({
-                products: productIds,
+                product: productIds,
                 payment: result,
                 buyer: req.user.id
 

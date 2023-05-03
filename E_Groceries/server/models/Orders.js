@@ -12,10 +12,14 @@ const ordersSchema = new mongoose.Schema({
     default: 'Not Process',
     enum: ['Not Process', 'Processing', 'Shipped', 'Delivered', 'Cancel']
   },
-  products: [{
+  product: [{
     type: String
     // type: mongoose.Schema.Types.ObjectId,
     // ref: 'Products',
+  }],
+  products: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Products',
   }],
 }, 
 {timestamps:true});

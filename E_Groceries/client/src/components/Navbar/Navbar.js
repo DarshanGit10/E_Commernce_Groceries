@@ -12,6 +12,7 @@ const Navbar = () => {
     localStorage.removeItem("User:Token");
     localStorage.removeItem("User:TokenExpiration");
     localStorage.removeItem("User:TokenCreation");
+    localStorage.removeItem("cart")
     navigate("/");
   };
 

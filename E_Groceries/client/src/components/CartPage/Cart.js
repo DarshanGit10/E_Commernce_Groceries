@@ -8,6 +8,7 @@ import DropIn from "braintree-web-drop-in-react";
 const Cart = ({}) => {
   const [cart, setCart] = useCart();
   const [userAddress, setUserAddress] = useState([]);
+  // console.log(userAddress)
   const [clientToken, setClientToken] = useState(null);
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
