@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Table, Image } from "react-bootstrap";
 import "./Order.css";
 
 const Order = () => {

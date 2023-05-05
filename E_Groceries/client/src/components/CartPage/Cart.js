@@ -3,10 +3,12 @@ import "./Cart.css";
 import { useCart } from "../../context/cart";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Alert from "../Alert";
 import DropIn from "braintree-web-drop-in-react";
 
 const Cart = ({}) => {
   const [cart, setCart] = useCart();
+  const [alert, setAlert] = useState(null);
   const [userAddress, setUserAddress] = useState([]);
   // console.log(userAddress)
   const [clientToken, setClientToken] = useState(null);
@@ -47,18 +49,26 @@ const Cart = ({}) => {
       console.log("Error fetching client token:", error);
     }
   };
-  
-
-  
 
   useEffect(() => {
     getToken();
   }, []);
 
+  function showAlert(message, type) {
+    setAlert({
+      msg: message,
+      ty: type,
+    });
+
+    setTimeout(() => {
+      setAlert(null);
+    }, 4000);
+  }
+
+
   const handlePayment = async(event) => {
     event.preventDefault();
     try {
-      // console.log("1")
       setLoading(true);
       const token = localStorage.getItem('User:Token');
       const {nonce} = await instance.requestPaymentMethod();
@@ -74,17 +84,14 @@ const Cart = ({}) => {
         })
       });
       const {ok} = await response.json();
-      // console.log("2")
       setLoading(false);
-      // console.log("3")
+      showAlert("Order placed and payment processed successfully; Continue shopping !", "success");
       setTimeout(() => {
         localStorage.removeItem('cart')
         setCart([])
         navigate('/order')
-        alert('Payment Successfully Completed')
-      }, 3000);
-   
-      // console.log("4")
+      }, 4000);
+
     } catch (error) {
       console.log(error);
       setLoading(false);  
@@ -123,9 +130,14 @@ const Cart = ({}) => {
     fetchUserAddressCart();
   }, []);
 
+
   return (
     <div>
       <div className="container cartContainer">
+      <div className="alertPositionCart">
+    <Alert alert={alert} />
+    {/* Alert Text !!!! */}
+  </div>
         <div className="row">
           <div className="md-col-12">
             <h1 className="text-center bg-light p-2 mb-1">Your Cart</h1>
@@ -192,10 +204,8 @@ const Cart = ({}) => {
                 </>
               )}
             </div>
-
             <div className="mt-2">
               {
-
                 !clientToken || !cart?.length ? ("") :
                 <>
                 <DropIn
@@ -216,9 +226,6 @@ const Cart = ({}) => {
             </button>
             </>
               }
-           
-
-           
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ const brainTree = require("braintree");
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-
+const Products = require('../models/Products')
 const Orders = require("../models/Orders");
 const FetchUser = require("../Middleware/FetchUser");
 
@@ -35,34 +35,43 @@ router.get("/brainTree/token", async (req, res) => {
 
 // Route 2, Payments
 router.post("/brainTree/payment", FetchUser, async (req, res) => {
-  
   try {
     const { nonce, cart } = req.body;
-    let total = 0;
-    cart.map((i) => {
-      total += i.price;
-    });
     const productIds = cart.map((i) => i._id);
+
+    const products = await Products.find({ _id: { $in: productIds } });
+    let total = 0;
+    products.forEach((p) => {
+      total += p.price;
+    });
+
     let newTransaction = gateway.transaction.sale(
       {
         amount: total,
         paymentMethodNonce: nonce,
         options: { submitForSettlement: true },
       },
-      
-      function (error, result) {
-        if(result){
-            const order = new Orders({
-                product: productIds,
-                payment: result,
-                buyer: req.user.id
+      async function (error, result) {
+        if (result) {
+          const order = new Orders({
+            product: productIds,
+            payment: result,
+            buyer: req.user.id,
+          });
 
-            }).save()
-            res.status(200).json({ok:true})
-        }
-        else{
-            console.error(error.message);
-    res.status(500).send("Internal Server Error");
+          // Save the order
+          await order.save();
+
+          // Update the count field in the products collection
+          await Products.updateMany(
+            { _id: { $in: productIds } },
+            { $inc: { count: -1 } }
+          );
+
+          res.status(200).json({ ok: true });
+        } else {
+          console.error(error.message);
+          res.status(500).send("Internal Server Error");
         }
       }
     );
@@ -71,5 +80,6 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 module.exports = router;

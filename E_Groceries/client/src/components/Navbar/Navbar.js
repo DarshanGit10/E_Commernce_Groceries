@@ -2,7 +2,9 @@ import React from "react";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import "./navbar.css";
 import { useCart } from "../../context/cart";
-import {Badge} from 'antd'
+import { Badge } from "antd";
+import SearchInput from "../SearchInput/SearchInput";
+
 
 const Navbar = () => {
   const [cart] = useCart();
@@ -12,13 +14,18 @@ const Navbar = () => {
     localStorage.removeItem("User:Token");
     localStorage.removeItem("User:TokenExpiration");
     localStorage.removeItem("User:TokenCreation");
-    localStorage.removeItem("cart")
+    localStorage.removeItem("cart");
     navigate("/");
   };
 
   const handleProfile = () => {
     navigate("/profile");
   };
+  
+  const handleOrders = () => {
+    navigate("/orders");
+  };
+
   return (
     <>
       <div>
@@ -44,21 +51,30 @@ const Navbar = () => {
                   Shop
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/contact" className="nav-link">
-                  Contact
-                </NavLink>
-              </li>
+              <li className="nav-item">
+             
+            <SearchInput />
+            
+            </li>
             </ul>
+           
           </div>
           <div className="navbar-right">
             <div className="btn-container">
               {!localStorage.getItem("User:Token") ? (
                 <>
-                  <Link className="btn btn-color-2" role="button" to="/login">
+                  <Link
+                    className="btn btn-color-2"
+                    role="button"
+                    to="/login"
+                  >
                     Log In
                   </Link>
-                  <Link className="btn btn-color-1" role="button" to="/signup">
+                  <Link
+                    className="btn btn-color-1"
+                    role="button"
+                    to="/signup"
+                  >
                     Sign Up
                   </Link>
                 </>
@@ -67,18 +83,33 @@ const Navbar = () => {
                   <button className="btn btn-color-2" onClick={handleLogout}>
                     Logout
                   </button>
-                  <img
+                  <div className="dropdown">
+                    <button className="btn-color-account">
+                    <img
                     src={require("../../assets/user.png")}
                     alt="Logo"
                     className="imgAvatar"
-                    onClick={handleProfile}
+              
                   />
-                  <li className="nav-item" style={{listStyle:"none"}}>
+                    </button>
+                    <div className="dropdown-content">
+                      <Link to="/profile" onClick={handleProfile} className="dropdown-content-link">
+                        Profile
+                      </Link>
+                      <Link to="/order" onClick={handleOrders}className="dropdown-content-link">
+                        Orders
+                      </Link>
+                    </div>
+                  </div>
+                  <li className="nav-item" style={{ listStyle: "none" }}>
                     <div className="add-cart-image">
                       <Badge count={cart?.length} showZero>
-                      <NavLink to="/cartPage" className="nav-link">
-                        <img src={require("../../assets/add-cart.png")} alt="Cart" />
-                      </NavLink>
+                        <NavLink to="/cartPage" className="nav-link">
+                          <img
+                            src={require("../../assets/add-cart.png")}
+                            alt="Cart"
+                          />
+                        </NavLink>
                       </Badge>
                     </div>
                   </li>
@@ -93,3 +124,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

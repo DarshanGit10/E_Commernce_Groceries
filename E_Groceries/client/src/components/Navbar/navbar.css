@@ -81,6 +81,7 @@ nav {
   list-style: none;
   font-size: 1rem;
   margin-top: 16px;
+  align-items: center;
 }
 
 
@@ -150,4 +151,44 @@ margin-top: 0px;
 .add-cart-image span{
   font-size: 16px;
   margin-left: 3px;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;
+  flex-direction: column;
+
+ 
+}
+
+.dropdown-content-link{
+  border: 1px solid none;
+  padding-top: 10px;
+  width: 70px;
+  color: black;
+  font-size: 15px;
+}
+
+.dropdown-content-link:hover{
+  border: 1px solid none;
+  padding-top: 10px;
+  width: 70px;
+  color: #778f298a;
+  font-size: 15px;
+}
+
+.btn-color-account{
+  border-radius: 35px;
+  padding: 0px;
 }

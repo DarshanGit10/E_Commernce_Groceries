@@ -60,6 +60,39 @@ router.get('/get_product/:slug', async (req, res) => {
 })
 
 
+// Route 3
+router.get('/search/:keyword', async (req, res) => {
+    try {
+        const { keyword } = req.params;
+        
+        // Validate the keyword parameter
+        if (!keyword || !/^[a-zA-Z0-9]+$/.test(keyword)) {
+            return res.status(400).json({ success: false, message: 'Invalid keyword' });
+        }
+        
+        // Query the database for matching products
+        const matchingProducts = await Products.find({
+            $or:[
+                { name: { $regex: keyword, $options: 'i' } },
+                { description: { $regex: keyword, $options: 'i' } },
+            ]
+        });
+        
+
+        
+        res.status(200).json({ success: true, matchingProducts });
+    } catch (error) {
+        console.error(error.message);
+        
+        // Handle different types of errors separately
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ success: false, message: error.message });
+        }      
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 
 module.exports = router;
