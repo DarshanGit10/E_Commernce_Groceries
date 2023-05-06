@@ -17,6 +17,9 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4",
+    "nodemailer": "^6.9.1",
+    "stream-browserify": "^3.0.0",
+    "tls": "^0.0.1",
     "util": "^0.12.5"
   },
   "devDependencies": {

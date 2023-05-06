@@ -8,6 +8,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   phoneNumber: { type: Number, required: true },
   date: { type: Date, default: Date.now },
+  verified: { type: Boolean, default: false },
 });
 
 const Users = mongoose.model("User", userSchema);

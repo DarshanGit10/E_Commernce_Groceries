@@ -12,9 +12,19 @@ import AddressForm from "./components/Address/AddressForm";
 import Cart from "./components/CartPage/Cart";
 import Order from "./components/Orders/Order";
 import SearchPage from "./components/SearchInput/SearchPage";
+import EmailVerify from "./components/Email/EmailVerify";
+
 
 
 function App() {
+
+
+  // const expirationTime = localStorage.getItem("User:TokenExpiration");
+  // if (!authToken || !expirationTime || new Date().getTime() > +expirationTime) {
+  // alert('Login Time expired, please login again ')
+  //   navigate("/login");
+  // }
+
   return (
     <>
         <Navbar />
@@ -29,6 +39,7 @@ function App() {
           <Route exact path="/cartPage" element={<Cart />} />
           <Route exact path="/order" element={<Order />} />
           <Route exact path="/search" element={<SearchPage/>} />
+          <Route path="/users/:id/verify/:token" element={<EmailVerify/>} />
         </Routes>
     </>
   );

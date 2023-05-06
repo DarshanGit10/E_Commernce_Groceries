@@ -76,10 +76,14 @@ const SignUp = () => {
       setErrors(fieldErrors);
     } else {
       setErrors({});
-      setSuccessMessage("User created successfully.");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
+      setSuccessMessage(resData.message);
+      // setTimeout(() => {
+      //   navigate("/login");
+      // }, 1500);
+      showAlert(resData.message, "success");
+        setTimeout(() => {
+          setSuccessMessage("");
+      }, 2500);
     }
   };
 

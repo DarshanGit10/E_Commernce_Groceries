@@ -5,6 +5,11 @@ const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
+const Token = require("../models/Token");
+const sendMail = require("../utils/sendMail")
+const crypto  = require('crypto')
+require('dotenv').config();
+
 // Route 1
 // SignUp using POST method /api/create_user
 const commonPasswords = ["password", "123456", "qwerty", "abc123"];
@@ -63,10 +68,19 @@ router.post(
         email,
         phoneNumber,
       });
+      const token = await new Token({
+        userId : user._id,
+        token : crypto.randomBytes(32).toString("hex")
+
+      }).save()
+      const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
+      await sendMail(user.email, "Action Required: Verify Your Account Information", url)
+
       const response = {
         success: true,
-        message: "User registered successfully.",
-        data: user,
+        // message: "User registered successfully.",
+        message: "An email sent to your account successfully.",
+        // data: user,
       };
       res.status(201).json(response);
     } catch (err) {
@@ -75,6 +89,27 @@ router.post(
     }
   }
 );
+
+
+// Route 1.1
+// Email Verification
+router.get('/:id/verify/:token', async(req, res) =>{
+  try {
+      const user = await User.findOne({_id:req.params.id})
+      if(!user) {return res.status(400).send({ message: "Invalid link" })}
+      const token = await Token.findOne({
+        userId: user._id,
+        token: req.params.token,
+      });
+      if (!token) return res.status(400).send({ message: "Invalid link" });
+      await User.updateOne({ _id: user._id }, { verified: true });
+      await Token.deleteOne({_id: token._id});
+      res.status(200).send({ message: "Email verified successfully" });
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 
 // Route 2
 // Login using POST method /api/login_user
@@ -120,7 +155,25 @@ router.post(
         },
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 6, // token will expire in 6 hours
       };
+      
       const authToken = jwt.sign(data, process.env.JWT_SECRET_KEY);
+
+      if (!user.verified) {
+        let token = await Token.findOne({ userId: user._id });
+        if (!token) {
+          token = await new Token({
+            userId: user._id,
+            token: crypto.randomBytes(32).toString("hex"),
+          }).save();
+          const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
+          await sendMail(user.email, "Action Required: Verify Your Account Information", url);
+        }
+  
+        return res
+          .status(400)
+          .send({ message: "An Email sent to your account please verify" });
+      }
+
       res.status(200).json({ success: true, token: authToken });
     } catch (err) {
       console.error(err);

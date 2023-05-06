@@ -34,20 +34,29 @@ const Login = () => {
         setTimeout(() => {
           navigate("/");
         }, 1500);
-      } else {
+      } 
+      else if(resData.message === 'An Email sent to your account please verify'){
+        setMessage('An Email sent to your account please verify')
+      }
+      else {
         setMessage("Invalid credentials!");
       }
+      setTimeout(() => {
+        setData({
+          email: "",
+          password: "",
+        });
+      }, 5000);
+      setTimeout(() => {
+        setMessage('');
+      }, 5000);
     } catch (error) {
       setMessage("An error occurred. Please try again later.");
     }
   };
   
-  // const authToken = localStorage.getItem("User:Token");
-  // const expirationTime = localStorage.getItem("User:TokenExpiration");
-  // if (!authToken || !expirationTime || new Date().getTime() > +expirationTime) {
-  // alert('Login Time expired, please login again ')
-  //   navigate("/login");
-  // }
+  
+
 
   const handleInputChange = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
