@@ -20,8 +20,14 @@ const Cart = ({}) => {
     navigate("/profile");
   };
 
+
+  const userId = localStorage.getItem('User:Id');
+  const cartKey = `User:${userId}:cart`;
+  const cartData = localStorage.getItem(cartKey);
+  const userCart = cartData ? JSON.parse(cartData) : [];
+
   useEffect(() => {
-    const cartData = localStorage.getItem("cart");
+    const cartData = localStorage.getItem("userCart");
     if (cartData) {
       setCart(JSON.parse(cartData));
     }
@@ -29,7 +35,7 @@ const Cart = ({}) => {
 
   const totalPrice = () => {
     try {
-      const total = cart.reduce((acc, item) => acc + item.price, 0);
+      const total = userCart.reduce((acc, item) => acc + item.price, 0);
       return total.toLocaleString("en-IN", {
         style: "currency",
         currency: "INR",
@@ -80,14 +86,14 @@ const Cart = ({}) => {
         },
         body: JSON.stringify({
           nonce,
-          cart
+          userCart
         })
       });
       const {ok} = await response.json();
       setLoading(false);
       showAlert("Order placed and payment processed successfully; Continue shopping !", "success");
       setTimeout(() => {
-        localStorage.removeItem('cart')
+        localStorage.removeItem(cartKey)
         setCart([])
         navigate('/order')
       }, 4000);
@@ -101,10 +107,10 @@ const Cart = ({}) => {
 
   const removeItemFromCart = (index) => {
     try {
-      const updatedCart = [...cart];
+      const updatedCart = [...cartKey];
       updatedCart.splice(index, 1);
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      localStorage.setItem(userCart, JSON.stringify(updatedCart));
     } catch (error) {
       console.log(error);
     }
@@ -131,6 +137,7 @@ const Cart = ({}) => {
   }, []);
 
 
+
   return (
     <div>
       <div className="container cartContainer">
@@ -142,15 +149,15 @@ const Cart = ({}) => {
           <div className="md-col-12">
             <h1 className="text-center bg-light p-2 mb-1">Your Cart</h1>
             <h4 className="text-center">
-              {cart?.length > 0
-                ? `You Have ${cart.length} items in your cart`
+              {userCart?.length > 0
+                ? `You Have ${userCart.length} items in your cart`
                 : "Your cart is empty"}
             </h4>
           </div>
         </div>
         <div className="row">
           <div className="col-md-7">
-            {cart.map((item, index) => {
+            {userCart?.map((item, index) => {
               return (
                 <div key={index} className="row m-2 card p-1 flex-row">
                   <div className="col-md-4">
@@ -206,7 +213,7 @@ const Cart = ({}) => {
             </div>
             <div className="mt-2">
               {
-                !clientToken || !cart?.length ? ("") :
+                !clientToken || !userCart?.length ? ("") :
                 <>
                 <DropIn
                 options={{

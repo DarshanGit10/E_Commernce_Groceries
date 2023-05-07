@@ -8,13 +8,19 @@ import SearchInput from "../SearchInput/SearchInput";
 
 const Navbar = () => {
   const [cart] = useCart();
+  const userId = localStorage.getItem('User:Id');
+  const cartKey = `User:${userId}:cart`;
+  const cartData = localStorage.getItem(cartKey);
+  const userCart = cartData ? JSON.parse(cartData) : [];
+
 
   let navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("User:Token");
     localStorage.removeItem("User:TokenExpiration");
     localStorage.removeItem("User:TokenCreation");
-    localStorage.removeItem("cart");
+    localStorage.removeItem("User:Id");
+    // localStorage.removeItem("cart");
     navigate("/");
   };
 
@@ -103,7 +109,7 @@ const Navbar = () => {
                   </div>
                   <li className="nav-item" style={{ listStyle: "none" }}>
                     <div className="add-cart-image">
-                      <Badge count={cart?.length} showZero>
+                      <Badge count={userCart?.length} showZero>
                         <NavLink to="/cartPage" className="nav-link">
                           <img
                             src={require("../../assets/add-cart.png")}

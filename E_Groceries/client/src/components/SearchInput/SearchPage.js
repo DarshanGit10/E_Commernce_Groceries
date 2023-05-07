@@ -32,14 +32,38 @@ const SearchPage = () => {
       }, 4000);
     }
     else{
-      setCart((prevCart) => {
+      // setCart((prevCart) => {
       
-          const newCart = [...prevCart, { ...product }];
-          localStorage.setItem('cart', JSON.stringify(newCart));
-          return newCart;
+      //     const newCart = [...prevCart, { ...product }];
+      //     localStorage.setItem('cart', JSON.stringify(newCart));
+      //     return newCart;
         
-      });
-      showAlert("Item added to cart", "success");
+      // });
+      // showAlert("Item added to cart", "success");
+      if (product.count === 0) {
+        showAlert('Item out of stock', 'warning');
+        return;
+      }
+      const userId = localStorage.getItem('User:Id');
+      let existingCart = localStorage.getItem(`User:${userId}:cart`) ? JSON.parse(localStorage.getItem(`User:${userId}:cart`)) : [];
+      
+      // Check if the current product already exists in the cart
+      // const existingProductIndex = existingCart.findIndex(product => product._id === _id);
+      // if (existingProductIndex > -1) {
+      //   // If the current product already exists, update its quantity and count
+      //   existingCart[existingProductIndex].count += count;
+      //   showAlert('Item updated in cart', 'success');
+      // } else {
+       
+      // }
+   // If the current product does not exist, add it to the cart
+   existingCart.push({ ...product });
+   showAlert('Item added to cart', 'success');
+      // Save the updated cart to localStorage
+      localStorage.setItem(`User:${userId}:cart`, JSON.stringify(existingCart));
+  
+      // Update the cart state with the updated cart data
+      setCart(existingCart);
     }
     }
 

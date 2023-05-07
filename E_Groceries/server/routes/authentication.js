@@ -174,7 +174,7 @@ router.post(
           .send({ message: "An Email sent to your account please verify" });
       }
 
-      res.status(200).json({ success: true, token: authToken });
+      res.status(200).json({ success: true, token: authToken, data: user._id });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal Server Error" });

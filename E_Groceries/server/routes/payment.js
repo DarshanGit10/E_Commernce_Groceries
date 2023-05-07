@@ -36,8 +36,8 @@ router.get("/brainTree/token", async (req, res) => {
 // Route 2, Payments
 router.post("/brainTree/payment", FetchUser, async (req, res) => {
   try {
-    const { nonce, cart } = req.body;
-    const productIds = cart.map((i) => i._id);
+    const { nonce, userCart } = req.body;
+    const productIds = userCart.map((i) => i._id);
 
     const products = await Products.find({ _id: { $in: productIds } });
     let total = 0;

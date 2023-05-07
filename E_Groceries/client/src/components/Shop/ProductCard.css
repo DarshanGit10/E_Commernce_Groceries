@@ -65,7 +65,7 @@
   
   .product-container{
     position: relative;
-    top: 70px;
+    top: 20px;
     left: 70px;
     z-index: 999;
   }
@@ -85,16 +85,33 @@
    top: 63px;
   }
 
-  .productFilter{
-    position: sticky;
-    top: 80px;
-    margin-left: 40px;
-  }
 
-  .filter-select{
-    color: black;
+
+  .price-filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 70px;
   }
   
-  .form-range{
-    width: 400px;
+  .price-filter__label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
   }
+  
+  .price-filter__select {
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 200px;
+    appearance: none;
+    background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path fill="%23808080" d="M0 0h8L4 4z"/></svg>') no-repeat right 10px center;
+    background-size: 8px 4px;
+  }
+  
+  .price-filter__select option {
+    font-size: 14px;
+  }
+  

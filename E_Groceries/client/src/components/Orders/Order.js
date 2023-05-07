@@ -17,7 +17,7 @@ const Order = () => {
         }
       );
       const resultData = await response.json();
-      console.log(resultData);
+      // console.log(resultData);
       setOrders(resultData);
     } catch (error) {
       console.log(error);
