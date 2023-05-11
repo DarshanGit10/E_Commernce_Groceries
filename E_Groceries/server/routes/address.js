@@ -73,6 +73,65 @@ router.post(
     }
   })
 
+// ROUTE 3: Update/Edit Address Login required
+router.put("/address/editAddress/:id", FetchUser, async (req, res) => {
+  try {
+    // destructing
+    const { street, city, state, zipCode } = req.body;
+    // Create a new Address Obj
+    const newAddress = {};
+    if (street) {
+      newAddress.street = street;
+    }
+    if (city) {
+      newAddress.city = city;
+    }
+    if (state) {
+      newAddress.state = state;
+    } 
+    if (zipCode) {
+      newAddress.zipCode = zipCode;
+    }
+    // Find the note to updated and update it
+    let address = await Address.findById(req.params.id);
+    if (!address) {
+      return res.status(404).send("Address not found");
+    }
+    if (address.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+    address = await Address.findByIdAndUpdate(
+      req.params.id,
+      { $set: newAddress },
+      { new: true }
+    );
+    res.json({success:true,  address });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+
+  // Route 4
+// Delete Address DELETE method  - login req
+router.delete("/address/deleteNote/:id", FetchUser, async (req, res) => {
+  try {
+    // Find the note to deleted and delete it
+    let address = await Address.findById(req.params.id);
+    if (!address) {
+      return res.status(404).send("Address not found");
+    }
+    if (address.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+    note = await Address.findByIdAndDelete(req.params.id);
+    res.json({ Success: "Deleted Address", address: Address });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 
 module.exports = router;

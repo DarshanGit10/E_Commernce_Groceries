@@ -74,7 +74,18 @@ router.post(
 
       }).save()
       const url = `${process.env.BASE_URL}users/${user._id}/verify/${token.token}`
-      await sendMail(user.email, "Action Required: Verify Your Account Information", url)
+            // generate html body
+  const html = `
+  <p>Hello,</p>
+  <p>Please click the following link to verify your account information:</p>
+  <p>Verify my account: </p> ${url}
+  <p>If you did not request this action, please ignore this email.</p>
+  <p>Thanks,</p>
+  <p>FreshCo Pantry</p>
+  <p>Happy Shopping!!!</p>
+`;
+// console.log(html)
+      await sendMail(user.email, "Action Required: Verify Your Account Information", html)
 
       const response = {
         success: true,

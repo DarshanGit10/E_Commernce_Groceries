@@ -41,45 +41,72 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
 
     const products = await Products.find({ _id: { $in: productIds } });
     let total = 0;
+    const updatedProductDetails = [];
     products.forEach((p) => {
-      total += p.price;
+      const item = userCart.find((i) => i._id.toString() === p._id.toString());
+      if (item) {
+        const numberOfQuantity = item.numberOfQuantity;
+        total += p.price * numberOfQuantity;
+        const productObject = p.toObject(); // Convert Mongoose document to plain JavaScript object
+        productObject.numberOfQuantity = numberOfQuantity; // Add numberOfQuantity property to the object
+        updatedProductDetails.push(productObject); // Push the updated object to the array
+      }
     });
 
-    let newTransaction = gateway.transaction.sale(
-      {
-        amount: total,
-        paymentMethodNonce: nonce,
-        options: { submitForSettlement: true },
-      },
-      async function (error, result) {
-        if (result) {
-          const order = new Orders({
-            product: productIds,
-            payment: result,
-            buyer: req.user.id,
-          });
+    // console.log("Total: ", total);
 
-          // Save the order
-          await order.save();
+    const result = await new Promise((resolve, reject) => {
+      gateway.transaction.sale(
+        {
+          amount: total,
+          paymentMethodNonce: nonce,
+          options: { submitForSettlement: true },
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
 
-          // Update the count field in the products collection
-          await Products.updateMany(
-            { _id: { $in: productIds } },
-            { $inc: { count: -1 } }
-          );
+    if (result.success) {
+      const order = new Orders({
+        product: productIds,
+        products: updatedProductDetails,
+        payment: result,
+        buyer: req.user.id,
+      });
 
-          res.status(200).json({ ok: true });
-        } else {
-          console.error(error.message);
-          res.status(500).send("Internal Server Error");
+      // Save the order
+      await order.save();
+
+      // Update the count field in the products collection
+      for (let i = 0; i < products.length; i++) {
+        const product = products[i];
+        const item = userCart.find((i) => i._id.toString() === product._id.toString());
+        if (item) {
+          const newCount = product.count - item.numberOfQuantity;
+          await Products.updateOne({ _id: product._id }, { $set: { count: newCount } });
         }
       }
-    );
+
+      res.status(200).json({ ok: true });
+    } else {
+      console.error(result.message);
+      res.status(500).send("Payment Failed");
+    }
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 });
+
+
+
+
 
 
 module.exports = router;

@@ -17,8 +17,6 @@ const Navbar = () => {
   let navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("User:Token");
-    localStorage.removeItem("User:TokenExpiration");
-    localStorage.removeItem("User:TokenCreation");
     localStorage.removeItem("User:Id");
     // localStorage.removeItem("cart");
     navigate("/");

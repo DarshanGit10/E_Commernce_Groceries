@@ -11,32 +11,8 @@ router.get("/getOrders", FetchUser, async (req, res) => {
       .populate("products")
       .populate("buyer", "firstName");
 
-    for (const order of orders) {
-      if (!Array.isArray(order.product)) {
-        continue;
-      }
-      const productIds = order.product.map((product) => product._id);
-      const products = await Products.find({ _id: { $in: productIds } });
-      // Map product details to corresponding order products
-      const updatedProducts = order.product.map((product) => {
-        const productDetails = products.find((p) => p._id.equals(product._id));
-        if (!productDetails) {
-          return product;
-        }
-        return { ...product, ...productDetails.toObject() };
-      });
-      // Update order document with updated products
-      await Orders.updateOne({ _id: order._id }, { products: updatedProducts });
-    }
+    return res.status(200).json(orders);
 
-    const updatedOrders = await Orders.find({ buyer: req.user.id })
-      .populate("product")
-      .populate("products")
-      .populate("buyer", "firstName");
-
-    return res.status(200).json(updatedOrders);
-
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -44,6 +20,33 @@ router.get("/getOrders", FetchUser, async (req, res) => {
       error: "Error while fetching the orders!",
       error,
     });
+  }
+});
+
+
+// Route 2
+// Cancel orders
+router.put("/cancelOrders/:orderId", FetchUser, async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const updatedOrder = await Orders.findByIdAndUpdate(orderId, { 
+      status: 'Cancelled',
+      payment: {
+        success: false
+      }
+    }, { new: true });
+    
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+
+
+    res.json({ success: true, message: 'Order Cancelled' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

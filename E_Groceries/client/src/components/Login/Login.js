@@ -25,13 +25,9 @@ const Login = () => {
         }),
       });
       const resData = await response.json();
-      console.log(resData)
+      // console.log(resData)
       if (resData.success) {
-        const expirationTime = new Date().getTime() + 6 * 60 * 60 * 1000; // 6 hours in milliseconds
-        const creationTime = new Date().getTime(); // current time in milliseconds
         localStorage.setItem("User:Token", resData.token);
-        localStorage.setItem("User:TokenExpiration", expirationTime.toString());
-        localStorage.setItem("User:TokenCreation", creationTime.toString());
         localStorage.setItem("User:Id", resData.data);
         setTimeout(() => {
           navigate("/");

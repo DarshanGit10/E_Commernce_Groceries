@@ -1,44 +1,42 @@
 import React, { useState } from 'react';
-import './AddressForm.css';
+import '../Address/AddressForm.css';
 
-const AddressForm = ({fetchUserAddress}) => {
-  const [address, setAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
+const EditProfile = ({fetchUserData}) => {
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
   });
   const [validationMsg, setValidationMsg] = useState('');
-  const [addressAdded, setAddressAdded] = useState(false); // Add state variable to track whether address was added or not
+  const [userAdded, setUserAdded] = useState(false); // Add state variable to track whether address was added or not
   const [showForm, setShowForm] = useState(true);
 
 
   const handleInputChange = (event) => {
-    setAddress({ ...address, [event.target.name]: event.target.value });
+    setUser({ ...user, [event.target.name]: event.target.value });
   };
 
-  const handleAddressSubmit = async (event) => {
+  const handleUserSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User:Token');
-    const response = await fetch('http://localhost:8089/api/address/addAddress', {
-      method: 'POST',
+    const response = await fetch('http://localhost:8089/api/user/edit_user', {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authentication-Token': `${token}`,
       },
       body: JSON.stringify({
-        street: address.street,
-        city: address.city,
-        state: address.state,
-        zipCode: address.zipCode,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
       }),
     });
     const resultData = await response.json();
     if (resultData.success) {
-      setValidationMsg('Address added successfully.');
-      setAddress({ street: '', city: '', state: '', zipCode: '' });
-      setAddressAdded(true); // Set addressAdded state variable to true after successfully adding an address
-      fetchUserAddress()
+      setValidationMsg('Profile updated successfully.');
+      setUser({ firstName: '', lastName: '', phoneNumber: '' });
+      setUserAdded(true); 
+      fetchUserData()
     } else {
       setValidationMsg(resultData.message);
     }
@@ -51,11 +49,8 @@ const AddressForm = ({fetchUserAddress}) => {
   
   const handleReset = () => {
     // Reset the form data to its initial state when Reset button is clicked
-    setAddress({
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
+    setUser({
+        firstName: '', lastName: '', phoneNumber: ''
     });
     setValidationMsg("");
     console.log("Reset button clicked");
@@ -64,65 +59,55 @@ const AddressForm = ({fetchUserAddress}) => {
     <>
     {showForm && (
     <div className="addAddressContainer">
-    <h4>Add Address</h4>
+    <h4>Update Profile</h4>
       <div className="addAddress-card"> 
-      {addressAdded ? ( // Conditionally render the form based on the addressAdded state variable
-        <p>Address added successfully.</p>
+      {userAdded ? ( 
+        <p>Profile updated successfully.</p>
       ) : (
         <div className="address-form">
-          <form onSubmit={handleAddressSubmit}>
+          <form onSubmit={handleUserSubmit}>
             <div className="address-form-group">
               <div className="address-form-group-left">
                 <div className="form-group">
-                  <label htmlFor="street">Street:</label>
+                  <label htmlFor="street">First Name:</label>
                   <input
                     type="text"
-                    id="street"
+                    id="firstName"
                     className='textCSS'
-                    name="street"
-                    value={address.street}
+                    name="firstName"
+                    value={user.firstName}
                     onChange={handleInputChange}
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="city">City:</label>
+                  <label htmlFor="city">Last Name:</label>
                   <input
                     type="text"
                     className='textCSS'
-                    id="city"
-                    name="city"
-                    value={address.city}
+                    id="lastName"
+                    name="lastName"
+                    value={user.lastName}
                     onChange={handleInputChange}
                   />
                 </div>
               </div>
               <div className="address-form-group-right">
                 <div className="form-group">
-                  <label htmlFor="state">State:</label>
+                  <label htmlFor="state">Phone Number:</label>
                   <input
                     type="text"
                     className='textCSS'
-                    id="state"
-                    name="state"
-                    value={address.state}
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={user.phoneNumber}
                     onChange={handleInputChange}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="zipCode">Zip Code:</label>
-                  <input
-                    type="text"
-                    className='textCSS'
-                    id="zipCode"
-                    name="zipCode"
-                    value={address.zipCode}
-                    onChange={handleInputChange}
-                  />
-                </div>
+                
               </div>
             </div>
           <div className="button-group">
-          <button type="submit" className="btn btn-color-2" >Add</button>
+          <button type="submit" className="btn btn-color-2" >Save</button>
             <button type="button" className="btn btn-color-2" onClick={handleCancel}>Cancel</button>
                   <button type="button" className="btn btn-color-2" onClick={handleReset}>Reset</button>
                   </div>
@@ -134,4 +119,4 @@ const AddressForm = ({fetchUserAddress}) => {
   );
 };
 
-export default AddressForm;
+export default EditProfile;

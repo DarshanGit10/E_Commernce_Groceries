@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './AddressForm.css';
 
-const AddressForm = ({fetchUserAddress}) => {
+const EditAddress = ({fetchUserAddress, addressId}) => {
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -9,7 +9,7 @@ const AddressForm = ({fetchUserAddress}) => {
     zipCode: '',
   });
   const [validationMsg, setValidationMsg] = useState('');
-  const [addressAdded, setAddressAdded] = useState(false); // Add state variable to track whether address was added or not
+  const [addressEdited, setAddressEdited] = useState(false); // Add state variable to track whether address was added or not
   const [showForm, setShowForm] = useState(true);
 
 
@@ -20,8 +20,8 @@ const AddressForm = ({fetchUserAddress}) => {
   const handleAddressSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User:Token');
-    const response = await fetch('http://localhost:8089/api/address/addAddress', {
-      method: 'POST',
+    const response = await fetch(`http://localhost:8089/api/address/editAddress/${addressId}`, {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authentication-Token': `${token}`,
@@ -37,7 +37,7 @@ const AddressForm = ({fetchUserAddress}) => {
     if (resultData.success) {
       setValidationMsg('Address added successfully.');
       setAddress({ street: '', city: '', state: '', zipCode: '' });
-      setAddressAdded(true); // Set addressAdded state variable to true after successfully adding an address
+      setAddressEdited(true); // Set addressAdded state variable to true after successfully adding an address
       fetchUserAddress()
     } else {
       setValidationMsg(resultData.message);
@@ -64,10 +64,10 @@ const AddressForm = ({fetchUserAddress}) => {
     <>
     {showForm && (
     <div className="addAddressContainer">
-    <h4>Add Address</h4>
+    <h4>Update Address</h4>
       <div className="addAddress-card"> 
-      {addressAdded ? ( // Conditionally render the form based on the addressAdded state variable
-        <p>Address added successfully.</p>
+      {addressEdited ? ( // Conditionally render the form based on the addressAdded state variable
+        <p>Address Updated successfully.</p>
       ) : (
         <div className="address-form">
           <form onSubmit={handleAddressSubmit}>
@@ -122,7 +122,7 @@ const AddressForm = ({fetchUserAddress}) => {
               </div>
             </div>
           <div className="button-group">
-          <button type="submit" className="btn btn-color-2" >Add</button>
+          <button type="submit" className="btn btn-color-2" >Save</button>
             <button type="button" className="btn btn-color-2" onClick={handleCancel}>Cancel</button>
                   <button type="button" className="btn btn-color-2" onClick={handleReset}>Reset</button>
                   </div>
@@ -134,4 +134,4 @@ const AddressForm = ({fetchUserAddress}) => {
   );
 };
 
-export default AddressForm;
+export default EditAddress;

@@ -61,3 +61,20 @@
 .addressCartContainer button Link{
     color: black;
 }
+
+
+.cartQty{
+    margin: 10px 0px;
+}
+
+.cartQty button{
+    border-radius: 15px;
+    background-color: black;
+    color: azure;
+}
+
+.cartQty button:hover{
+    
+    background-color: azure;
+    color: black;
+}

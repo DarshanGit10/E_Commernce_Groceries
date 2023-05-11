@@ -73,3 +73,12 @@
     width: 400px;
     height: 200px;
   }
+
+  .button-group button{
+      width: 100px;
+  }
+
+  .button-group{
+    justify-content: space-evenly;
+    display: flex;
+}

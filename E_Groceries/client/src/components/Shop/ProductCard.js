@@ -12,6 +12,7 @@ const ProductCard = ({
   quantity,
   count,
   _id,
+  numberOfQuantity
 }) => {
   const [alert, setAlert] = useState(null);
   const [cart, setCart] = useCart();
@@ -48,25 +49,35 @@ const ProductCard = ({
         : [];
 
       // Check if the current product already exists in the cart
-      // const existingProductIndex = existingCart.findIndex(product => product._id === _id);
-      // if (existingProductIndex > -1) {
-      //   // If the current product already exists, update its quantity and count
-      //   existingCart[existingProductIndex].count += count;
-      //   showAlert('Item updated in cart', 'success');
-      // } else {
-
-      // }
-      // If the current product does not exist, add it to the cart
-      existingCart.push({
-        _id,
-        name,
-        description,
-        photo,
-        price,
-        quantity,
-        count,
-      });
-      showAlert("Item added to cart", "success");
+      const existingProductIndex = existingCart.findIndex(product => product._id === _id);
+      if (existingProductIndex > -1) {
+        // If the current product already exists, update its quantity and count
+        existingCart[existingProductIndex].numberOfQuantity += numberOfQuantity;
+        showAlert('Item updated in cart', 'success');
+      } else {
+        existingCart.push({
+          _id,
+          name,
+          description,
+          photo,
+          price,
+          quantity,
+          count,
+          numberOfQuantity
+        });
+        showAlert("Item added to cart", "success");
+      }
+      // // If the current product does not exist, add it to the cart
+      // existingCart.push({
+      //   _id,
+      //   name,
+      //   description,
+      //   photo,
+      //   price,
+      //   quantity,
+      //   count,
+      // });
+      // showAlert("Item added to cart", "success");
       // Save the updated cart to localStorage
       localStorage.setItem(`User:${userId}:cart`, JSON.stringify(existingCart));
 
@@ -96,7 +107,7 @@ const ProductCard = ({
           <p>{description}</p>
           <div className="product-info">
             <div className="product-price">Price: {price}</div>
-            <div className="product-quantity">Quantity: {quantity}</div>
+            <div className="product-quantity">{quantity}</div>
             <div className="product-count">Count: {count}</div>
           </div>
         </div>

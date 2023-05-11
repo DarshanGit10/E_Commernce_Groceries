@@ -35,7 +35,7 @@ const Cart = ({}) => {
 
   const totalPrice = () => {
     try {
-      const total = userCart.reduce((acc, item) => acc + item.price, 0);
+      const total = userCart.reduce((acc, item) => acc + (item.price * item.numberOfQuantity), 0);
       return total.toLocaleString("en-IN", {
         style: "currency",
         currency: "INR",
@@ -44,6 +44,7 @@ const Cart = ({}) => {
       console.log(error);
     }
   };
+  
 
   // Get payment gateway token
   const getToken = async () => {
@@ -105,12 +106,29 @@ const Cart = ({}) => {
   };
   
 
+  const incrementItemQuantity = (index) => {
+    const updatedCart = [...userCart];
+    updatedCart[index].numberOfQuantity += 1;
+    setCart(updatedCart);
+    localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+  };
+  
+  const decrementItemQuantity = (index) => {
+    const updatedCart = [...userCart];
+    if (updatedCart[index].numberOfQuantity > 1) {
+      updatedCart[index].numberOfQuantity -= 1;
+      setCart(updatedCart);
+      localStorage.setItem(cartKey, JSON.stringify(updatedCart));
+    }
+  };
+  
+
   const removeItemFromCart = (index) => {
     try {
-      const updatedCart = [...cartKey];
+      const updatedCart = [...userCart]; 
       updatedCart.splice(index, 1);
       setCart(updatedCart);
-      localStorage.setItem(userCart, JSON.stringify(updatedCart));
+      localStorage.setItem(cartKey, JSON.stringify(updatedCart)); 
     } catch (error) {
       console.log(error);
     }
@@ -172,14 +190,34 @@ const Cart = ({}) => {
                     <h6>{item.name}</h6>
                     <p>{item.description}</p>
                     <span>Price: {item.price}/-</span>{" "}
-                    <span style={{ marginLeft: "15px" }}>
+                    <span style={{ marginLeft: "100px" }}>
                       {" "}
-                      Quantity: {item.quantity}
+                      {item.quantity} * {item.numberOfQuantity}
                     </span>
+
+                    <div className="cartQty">
+ 
+ 
+ <button onClick={() => incrementItemQuantity(index)}>
+   +
+ </button>
+ <span style={{margin:'0px 10px'}}>
+
+ Quantity: {item.numberOfQuantity}
+</span>
+ <button onClick={() => decrementItemQuantity(index)}>
+   -
+ </button>
+
+</div>
+
+
                     <div className="cartRemoveBtn">
                       <button onClick={() => removeItemFromCart(index)}>
                         Remove
                       </button>
+
+
                     </div>
                   </div>
                 </div>

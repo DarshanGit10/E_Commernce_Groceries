@@ -2,7 +2,7 @@ const nodeEmailer = require('nodemailer');
 const tls = require('tls');
 require('dotenv').config();
 
-module.exports = async (email, subject, text) => {
+module.exports = async (email, subject, html, text) => {
     
   try {
     const transporter = nodeEmailer.createTransport({
@@ -18,11 +18,13 @@ module.exports = async (email, subject, text) => {
         ciphers:'SSLv3'
     }
     });
+
+
     await transporter.sendMail({
       from: process.env.USER,
       to: email,
       subject: subject,
-      text: text,
+      html: html
     });
     console.log('Email sent successfully');
   } catch (error) {

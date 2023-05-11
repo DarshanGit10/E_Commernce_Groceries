@@ -1,40 +1,60 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import AddressForm from "../Address/AddressForm";
-import Cart from "../CartPage/Cart";
+import Alert from "../Alert";
+import EditAddress from "../Address/EditAddress";
+import EditProfile from "./EditProfile";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
+  const [userAddressId, setUserAddressId] = useState("");
   const [userAddress, setUserAddress] = useState([]);
+  // console.log(userAddress)
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
-  
+  const [showEditAddressForm, setShowEditAddressForm] = useState(false);
+  const [showEditUserForm, setShowEditUserForm] = useState(false);
+  const [alert, setAlert] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("User:Token");
-      const response = await fetch("http://localhost:8089/api/user/get_user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authentication-Token": `${token}`,
-        },
-      });
-      const resData = await response.json();
-      setUserData(resData);
-    };
-    fetchUserData();
- 
-  }, []);  
-  
-  const fetchUserAddress = async () => {
+  function showAlert(message, type) {
+    setAlert({
+      msg: message,
+      ty: type,
+    });
+
+    setTimeout(() => {
+      setAlert(null);
+    }, 4000);
+  }
+
+  const fetchUserData = async () => {
     const token = localStorage.getItem("User:Token");
-    const response = await fetch("http://localhost:8089/api/address/getAddress", {
+    const response = await fetch("http://localhost:8089/api/user/get_user", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "Authentication-Token": `${token}`,
       },
     });
+    const resData = await response.json();
+    setUserData(resData);
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserAddress = async () => {
+    const token = localStorage.getItem("User:Token");
+    const response = await fetch(
+      "http://localhost:8089/api/address/getAddress",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication-Token": `${token}`,
+        },
+      }
+    );
     const resData = await response.json();
     setUserAddress(resData);
   };
@@ -46,71 +66,160 @@ const Profile = () => {
   const handleAddAddressClick = () => {
     setShowAddAddressForm(true);
   };
-  
+
+  const handleAddressEdit = () =>{
+    setShowEditAddressForm(true)
+  }
+
+  const handlePassAddressId = (addressId) =>{
+    setUserAddressId(addressId)
+  }
+
+  const handleUserEdit = () =>{
+    setShowEditUserForm(true)
+  }
+
+  // const handleUserDelete = () =>{
+
+  // }
+
+  const handleAddressDelete = async (addressId) => {
+    const token = localStorage.getItem("User:Token");
+    const response = await fetch(
+      `http://localhost:8089/api/address/deleteNote/${addressId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Authentication-Token": `${token}`,
+        },
+      }
+    );
+    const resData = await response.json();
+    if (resData.Success === "Deleted Address") {
+      showAlert("Address deleted successfully!", "warning");
+      fetchUserAddress();
+    } else {
+      console.log("Error");
+    }
+  };
+
   return (
     <>
       <div className="profileContainer">
-
         <h4>Profile Details</h4>
-      
-      {userData ? (
-        <div className="profile-card">
-          <h3 className="profile-name">
-            {userData.firstName} {userData.lastName}
-          </h3>
-          <div className="profile-info">
-            <p>
-              <strong>Email:</strong> {userData.email}
-            </p>
-            <p>
-              <strong>Phone Number:</strong> {userData.phoneNumber}
-            </p>
+
+        {userData ? (
+          <div className="profile-card">
+            <h3 className="profile-name">
+              {userData.firstName} {userData.lastName}
+              <img
+                          src={require("../../assets/draw.png")}
+                          alt="Cart"
+                          
+                          onClick={() => {
+                          handleUserEdit()}}
+                        />
+                               {/* <img
+                          src={require("../../assets/garbage.png")}
+                          alt="Cart"
+                          style={{
+                           marginLeft:"35px"
+                          }}
+                          onClick={() => handleUserDelete()}
+                        /> */}
+            </h3>
+            <div className="profile-info">
+              <p>
+                <strong>Email:</strong> {userData.email}
+              </p>
+              <p>
+                <strong>Phone Number:</strong> {userData.phoneNumber}
+              </p>
+            </div>
+            <button onClick={handleAddAddressClick} className="btn btn-color-2">
+              Add Address
+            </button>
+            {showAddAddressForm && (
+              <AddressForm fetchUserAddress={fetchUserAddress} />
+            )}  
+            {showEditAddressForm && (
+              <EditAddress fetchUserAddress={fetchUserAddress} addressId={userAddressId} />
+            )} 
+            {showEditUserForm && (
+              <EditProfile fetchUserData={fetchUserData} />
+            )}
           </div>
-          <button onClick={handleAddAddressClick} className="btn btn-color-2">Add Address</button>
-          {showAddAddressForm && <AddressForm fetchUserAddress={fetchUserAddress}/>}
-          
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
-    </div>
-    <div className="addressContainer">
-    <h4>Addresses</h4>
-      <div className="address-card"> 
-        {userAddress ? (
-          <table>
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Street</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip Code</th>
-                <th>Country</th>
-              </tr>
-            </thead>
-            <tbody>
-  {userAddress && userAddress.length > 0 ? userAddress.map((address, index) => (
-    <tr key={address._id}>
-      <td>{index + 1}</td>
-      <td>{address.street}</td>
-      <td>{address.city}</td>
-      <td>{address.state}</td>
-      <td>{address.zipCode}</td>
-      <td>{address.country}</td>
-    </tr>
-  )) : (
-    <tr>
-      <td colSpan="6">No addresses found</td>
-    </tr>
-  )}
-</tbody>
-          </table>
         ) : (
           <p>Loading...</p>
         )}
       </div>
-    </div>
+      <div className="addressContainer">
+        <div className="alertPositionProduct">
+          <Alert alert={alert} />
+        </div>
+        <h4>Addresses</h4>
+        <div className="address-card">
+          {userAddress ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th>Street</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Zip Code</th>
+                  <th>Country</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {userAddress && userAddress.length > 0 ? (
+                  userAddress.map((address, index) => (
+                    <tr key={address._id}>
+                      <td>{index + 1}</td>
+                      <td>{address.street}</td>
+                      <td>{address.city}</td>
+                      <td>{address.state}</td>
+                      <td>{address.zipCode}</td>
+                      <td>{address.country}</td>
+                      <td>
+                      <img
+                          src={require("../../assets/draw.png")}
+                          alt="Cart"
+                          style={{
+                            height: "20px",
+                            width: "20px",
+                            cursor: "pointer",
+                            marginRight:"10px"
+                          }}
+                          onClick={() => {handleAddressEdit();
+                          handlePassAddressId(address._id)}}
+                        />
+                        <img
+                          src={require("../../assets/garbage.png")}
+                          alt="Cart"
+                          style={{
+                            height: "20px",
+                            width: "20px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => handleAddressDelete(address._id)}
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6">No addresses found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
+      </div>
     </>
   );
 };
