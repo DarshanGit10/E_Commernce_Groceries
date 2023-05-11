@@ -67,20 +67,7 @@ const ProductCard = ({
         });
         showAlert("Item added to cart", "success");
       }
-      // // If the current product does not exist, add it to the cart
-      // existingCart.push({
-      //   _id,
-      //   name,
-      //   description,
-      //   photo,
-      //   price,
-      //   quantity,
-      //   count,
-      // });
-      // showAlert("Item added to cart", "success");
-      // Save the updated cart to localStorage
       localStorage.setItem(`User:${userId}:cart`, JSON.stringify(existingCart));
-
       // Update the cart state with the updated cart data
       setCart(existingCart);
     }

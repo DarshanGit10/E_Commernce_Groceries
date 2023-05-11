@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './AddressForm.css';
 
+const host = process.env.REACT_APP_LOCALHOST;
+
 const EditAddress = ({fetchUserAddress, addressId}) => {
   const [address, setAddress] = useState({
     street: '',
@@ -20,7 +22,7 @@ const EditAddress = ({fetchUserAddress, addressId}) => {
   const handleAddressSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User:Token');
-    const response = await fetch(`http://localhost:8089/api/address/editAddress/${addressId}`, {
+    const response = await fetch(`${host}api/address/editAddress/${addressId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

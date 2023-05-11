@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./Order.css";
 import Alert from "../Alert";
 
+const host = process.env.REACT_APP_LOCALHOST;
 
 const Order = () => {
   const [orders, setOrders] = useState([]);
   const [alert, setAlert] = useState(null);
   // console.log(orders)
-
 
   function showAlert(message, type) {
     setAlert({
@@ -24,7 +24,7 @@ const Order = () => {
     try {
       const token = localStorage.getItem("User:Token");
       const response = await fetch(
-        "http://localhost:8089/api/orders/getOrders",
+        `${host}api/orders/getOrders`,
         {
           method: "GET",
           headers: {
@@ -44,31 +44,31 @@ const Order = () => {
     fetchOrders();
   }, []);
 
-const handleOrderCancel = async(orderId) =>{
-  const token = localStorage.getItem("User:Token");
-  const response = await fetch(
-    `http://localhost:8089/api/orders/cancelOrders/${orderId}`,
-    {
-      method: "PUT",
-      headers: {
-        "Authentication-Token": `${token}`,
-      },
+  const handleOrderCancel = async (orderId) => {
+    const token = localStorage.getItem("User:Token");
+    const response = await fetch(
+      `${host}api/orders/cancelOrders/${orderId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Authentication-Token": `${token}`,
+        },
+      }
+    );
+    const resData = await response.json();
+    if (resData.success) {
+      showAlert("Order Cancelled successfully!", "warning");
+      fetchOrders();
+    } else {
+      console.log("Error");
     }
-  );
-  const resData = await response.json();
-  if (resData.success) {
-    showAlert("Order Cancelled successfully!", "warning");
-    fetchOrders();
-  } else {
-    console.log("Error");
-  }
-}
+  };
 
   return (
     <div className="order-container">
-          <div className="alertPositionProduct">
-          <Alert alert={alert} />
-        </div>
+      <div className="alertPositionProduct">
+        <Alert alert={alert} />
+      </div>
       <h3 className="order-title">All Orders</h3>
       <table>
         <thead>
@@ -102,11 +102,20 @@ const handleOrderCancel = async(orderId) =>{
                   </div>
                 ))}
               </td>
-              <td className={`payment-status ${
-                  order.payment.success ? "" : order.status === "Cancelled" ? "refunded" : "not-paid"
+              <td
+                className={`payment-status ${
+                  order.payment.success
+                    ? ""
+                    : order.status === "Cancelled"
+                    ? "refunded"
+                    : "not-paid"
                 }`}
               >
-                {order.payment.success ? "Paid" : order.status === "Cancelled" ? "Refunded" : "Not Paid"}
+                {order.payment.success
+                  ? "Paid"
+                  : order.status === "Cancelled"
+                  ? "Refunded"
+                  : "Not Paid"}
               </td>
               <td className={`order-status ${order.status.toLowerCase()}`}>
                 {order.status}
@@ -117,18 +126,22 @@ const handleOrderCancel = async(orderId) =>{
               </td>
               <td className="order-date">
                 {new Date(order.updatedAt).toLocaleString()}
-              </td>  
+              </td>
               <td className="order-date">
-              <img
-                          src={require("../../assets/cancel.png")}
-                          alt="Cart"
-                          style={{
-                            height: "30px",
-                            width: "30px",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => handleOrderCancel(order._id)}
-                        />
+                <img
+                  src={require("../../assets/cancel.png")}
+                  alt="Cart"
+                  style={{
+                    height: "30px",
+                    width: "30px",
+                    cursor:
+                      order.status === "Delivered" ? "not-allowed" : "pointer",
+                    opacity: order.status === "Delivered" ? 0.5 : 1,
+                  }}
+                  onClick={() =>
+                    order.status !== "Delivered" && handleOrderCancel(order._id)
+                  }
+                />
               </td>
             </tr>
           ))}

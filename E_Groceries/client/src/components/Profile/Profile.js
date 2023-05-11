@@ -4,6 +4,8 @@ import AddressForm from "../Address/AddressForm";
 import Alert from "../Alert";
 import EditAddress from "../Address/EditAddress";
 import EditProfile from "./EditProfile";
+const host = process.env.REACT_APP_LOCALHOST;
+
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -28,7 +30,7 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     const token = localStorage.getItem("User:Token");
-    const response = await fetch("http://localhost:8089/api/user/get_user", {
+    const response = await fetch(`${host}api/user/get_user`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +48,7 @@ const Profile = () => {
   const fetchUserAddress = async () => {
     const token = localStorage.getItem("User:Token");
     const response = await fetch(
-      "http://localhost:8089/api/address/getAddress",
+      `${host}api/address/getAddress`,
       {
         method: "GET",
         headers: {
@@ -86,7 +88,7 @@ const Profile = () => {
   const handleAddressDelete = async (addressId) => {
     const token = localStorage.getItem("User:Token");
     const response = await fetch(
-      `http://localhost:8089/api/address/deleteNote/${addressId}`,
+      `${host}address/deleteNote/${addressId}`,
       {
         method: "DELETE",
         headers: {

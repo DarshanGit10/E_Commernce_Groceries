@@ -4,6 +4,8 @@ import axios from "axios";
 import successImg from "../../assets/success.png";
 import './EmailVerify.css'
 
+const host = process.env.REACT_APP_LOCALHOST;
+
 const EmailVerify = () => {
   const [validUrl, setValidUrl] = useState(false);
   const param = useParams();
@@ -11,7 +13,7 @@ const EmailVerify = () => {
   useEffect(() => {
     const verifyEmailUrl = async () => {
       try {
-        const url = `http://localhost:8089/api/${param.id}/verify/${param.token}`;
+        const url = `${host}api/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log(data);
         setValidUrl(true);

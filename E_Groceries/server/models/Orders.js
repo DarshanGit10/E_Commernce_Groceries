@@ -10,7 +10,7 @@ const ordersSchema = new mongoose.Schema({
   status:{
     type: String,
     default: 'Not Process',
-    enum: ['Not Process', 'Processing', 'Shipped', 'Delivered', 'Cancelled']
+    enum: ['Not Process', 'Processing', 'Shipped', 'Delivered']
   },
   product: [{
     type: String

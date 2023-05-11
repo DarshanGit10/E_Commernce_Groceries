@@ -13,6 +13,10 @@ require('dotenv').config();
 const cors = require('cors')
 app.use(cors());
 
+const cronJobs = require('./utils/cronJobs');
+
+cronJobs.start();
+
 // Middleware
 app.use(express.json());
 

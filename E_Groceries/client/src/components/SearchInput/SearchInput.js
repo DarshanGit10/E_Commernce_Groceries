@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useSearch } from '../../context/search'
+const host = process.env.REACT_APP_LOCALHOST;
 
 const SearchInput = () => {
     const [values, setValues] = useSearch()
@@ -10,7 +11,7 @@ const SearchInput = () => {
     const handleSubmit = async(event) =>{
         event.preventDefault()
         try {
-            const {data} = await axios.get(`http://localhost:8089/api/products/search/${values.keyword}`)
+            const {data} = await axios.get(`${host}api/products/search/${values.keyword}`)
             console.log(data.matchingProducts)
             setValues({...values, matchingProducts: data.matchingProducts})
             navigate('/search')

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from './ProductList';
+const host = process.env.REACT_APP_LOCALHOST;
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8089/api/products/get_product')
+    fetch(`${host}api/products/get_product`)
       .then((response) => response.json())
       .then((data) => {
         setProducts(data.products);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../Address/AddressForm.css';
+const host = process.env.REACT_APP_LOCALHOST;
 
 const EditProfile = ({fetchUserData}) => {
   const [user, setUser] = useState({
@@ -19,7 +20,7 @@ const EditProfile = ({fetchUserData}) => {
   const handleUserSubmit = async (event) => {
     event.preventDefault();
     const token = localStorage.getItem('User:Token');
-    const response = await fetch('http://localhost:8089/api/user/edit_user', {
+    const response = await fetch(`${host}api/user/edit_user`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

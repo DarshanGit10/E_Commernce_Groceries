@@ -2,6 +2,9 @@ import './login.css'
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+
+const host = process.env.REACT_APP_LOCALHOST;
+
 const Login = () => {
   let navigate = useNavigate();
  
@@ -10,11 +13,12 @@ const Login = () => {
     password: "",
   });
   const [message, setMessage] = useState("");
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("http://localhost:8089/api/login_user", {
+      const response = await fetch(`${host}api/login_user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

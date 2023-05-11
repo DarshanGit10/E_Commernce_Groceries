@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./signup.css";
 import { useNavigate, Link } from "react-router-dom";
 import Alert from "../Alert";
+const host = process.env.REACT_APP_LOCALHOST;
+
 
 const SignUp = () => {
   const [alert, setAlert] = useState(null);
@@ -47,7 +49,7 @@ const SignUp = () => {
       return;
     }
 
-    const response = await fetch("http://localhost:8089/api/create_user", {
+    const response = await fetch(`${host}api/create_user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

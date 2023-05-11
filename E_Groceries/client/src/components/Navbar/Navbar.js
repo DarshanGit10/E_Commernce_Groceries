@@ -6,6 +6,7 @@ import { Badge } from "antd";
 import SearchInput from "../SearchInput/SearchInput";
 
 
+
 const Navbar = () => {
   const [cart] = useCart();
   const userId = localStorage.getItem('User:Id');
