@@ -5,6 +5,8 @@ const router = express.Router();
 const Products = require('../models/Products')
 const Orders = require("../models/Orders");
 const FetchUser = require("../Middleware/FetchUser");
+const sendMail = require("../utils/sendMail")
+const User = require("../models/Users");
 
 
 
@@ -36,7 +38,7 @@ router.get("/brainTree/token", async (req, res) => {
 // Route 2, Payments
 router.post("/brainTree/payment", FetchUser, async (req, res) => {
   try {
-    const { nonce, userCart } = req.body;
+    const { nonce, userCart, selectedAddress } = req.body;
     const productIds = userCart.map((i) => i._id);
 
     const products = await Products.find({ _id: { $in: productIds } });
@@ -78,10 +80,29 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
         products: updatedProductDetails,
         payment: result,
         buyer: req.user.id,
+        shippingAddress: selectedAddress
       });
-
+    
       // Save the order
-      await order.save();
+      const savedOrder = await order.save();
+      const orderId = savedOrder._id; // Retrieve the order ID
+    
+      const user = await User.findById(req.user.id);
+      const userEmail = user.email;
+      const userName = user.firstName
+      
+      const html = `
+        <p>Hello <b>${userName}</b>,</p>
+        <p>Thank you for placing your order with FreshCo Pantry. We are delighted to inform you that your order with order ID ${orderId} has been successfully placed and is being processed.</p>
+        <p>Thank you for choosing our service and we look forward to continuing to provide you with the best experience possible. </p>
+        <p>Thanks,</p>
+        <p>FreshCo Pantry</p>
+        <p>Happy Shopping!!!</p>
+      `;
+    
+      await sendMail(userEmail, `Order Confirmation - ${orderId}`, html);
+    
+    
 
       // Update the count field in the products collection
       for (let i = 0; i < products.length; i++) {

@@ -11,7 +11,7 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [userAddressId, setUserAddressId] = useState("");
   const [userAddress, setUserAddress] = useState([]);
-  // console.log(userAddress)
+  const [existingAddress, setExistingAddress] = useState("")
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
   const [showEditAddressForm, setShowEditAddressForm] = useState(false);
   const [showEditUserForm, setShowEditUserForm] = useState(false);
@@ -81,14 +81,13 @@ const Profile = () => {
     setShowEditUserForm(true)
   }
 
-  // const handleUserDelete = () =>{
 
-  // }
 
+ 
   const handleAddressDelete = async (addressId) => {
     const token = localStorage.getItem("User:Token");
     const response = await fetch(
-      `${host}address/deleteNote/${addressId}`,
+      `${host}address/deleteAddress/${addressId}`,
       {
         method: "DELETE",
         headers: {
@@ -121,14 +120,7 @@ const Profile = () => {
                           onClick={() => {
                           handleUserEdit()}}
                         />
-                               {/* <img
-                          src={require("../../assets/garbage.png")}
-                          alt="Cart"
-                          style={{
-                           marginLeft:"35px"
-                          }}
-                          onClick={() => handleUserDelete()}
-                        /> */}
+                
             </h3>
             <div className="profile-info">
               <p>
@@ -145,10 +137,10 @@ const Profile = () => {
               <AddressForm fetchUserAddress={fetchUserAddress} />
             )}  
             {showEditAddressForm && (
-              <EditAddress fetchUserAddress={fetchUserAddress} addressId={userAddressId} />
+              <EditAddress fetchUserAddress={fetchUserAddress} addressId={userAddressId} existingAddress={existingAddress} />
             )} 
             {showEditUserForm && (
-              <EditProfile fetchUserData={fetchUserData} />
+              <EditProfile fetchUserData={fetchUserData} userData={userData}/>
             )}
           </div>
         ) : (
@@ -171,7 +163,7 @@ const Profile = () => {
                   <th>State</th>
                   <th>Zip Code</th>
                   <th>Country</th>
-                  <th>Delete</th>
+                  <th>Delete/Edit</th>
                 </tr>
               </thead>
               <tbody>
@@ -195,7 +187,9 @@ const Profile = () => {
                             marginRight:"10px"
                           }}
                           onClick={() => {handleAddressEdit();
-                          handlePassAddressId(address._id)}}
+                          handlePassAddressId(address._id)
+                          setExistingAddress(address)
+                        }}
                         />
                         <img
                           src={require("../../assets/garbage.png")}

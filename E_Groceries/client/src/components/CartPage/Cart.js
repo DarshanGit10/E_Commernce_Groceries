@@ -24,7 +24,6 @@ const Cart = ({}) => {
   let cartData = localStorage.getItem(cartKey);
   const userCart = cartData ? JSON.parse(cartData) : [];
 
-
   useEffect(() => {
     const cartData = localStorage.getItem("userCart");
     if (cartData) {
@@ -50,9 +49,7 @@ const Cart = ({}) => {
   // Get payment gateway token
   const getToken = async () => {
     try {
-      const { data } = await axios.get(
-        `${host}api/payment/brainTree/token`
-      );
+      const { data } = await axios.get(`${host}api/payment/brainTree/token`);
       setClientToken(data?.clientToken);
     } catch (error) {
       console.log("Error fetching client token:", error);
@@ -78,22 +75,21 @@ const Cart = ({}) => {
     event.preventDefault();
     try {
       setLoading(true);
+      const selectedAddress = localStorage.getItem("selectedAddress");
       const token = localStorage.getItem("User:Token");
       const { nonce } = await instance.requestPaymentMethod();
-      const response = await fetch(
-        `${host}api/payment/brainTree/payment`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authentication-Token": `${token}`,
-          },
-          body: JSON.stringify({
-            nonce,
-            userCart,
-          }),
-        }
-      );
+      const response = await fetch(`${host}api/payment/brainTree/payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authentication-Token": `${token}`,
+        },
+        body: JSON.stringify({
+          nonce,
+          userCart,
+          selectedAddress,
+        }),
+      });
       const { ok } = await response.json();
       setLoading(false);
       showAlert(
@@ -103,6 +99,7 @@ const Cart = ({}) => {
       setTimeout(() => {
         localStorage.removeItem(cartKey);
         setCart([]);
+        localStorage.removeItem("selectedAddress");
         navigate("/order");
       }, 4000);
     } catch (error) {
@@ -140,16 +137,13 @@ const Cart = ({}) => {
 
   const fetchUserAddressCart = async () => {
     const token = localStorage.getItem("User:Token");
-    const response = await fetch(
-      `${host}api/address/getAddress`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authentication-Token": `${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${host}api/address/getAddress`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authentication-Token": `${token}`,
+      },
+    });
     const resData = await response.json();
     setUserAddress(resData);
   };
@@ -223,25 +217,37 @@ const Cart = ({}) => {
             <hr />
             <h5>Total: {totalPrice()}/-</h5>
             <div className="mb-3 addressCartContainer">
-  <h5>Select an address:</h5>
-  {userAddress && userAddress.length > 0 ? (
-    <select name="address">
-      <option value="" disabled>Select an address</option>
-      {userAddress.map((address) => (
-        <option key={address._id} value={address._id}>
-          {address.street}, {address.city}, {address.state} {address.zip}
-        </option>
-      ))}
-    </select>
-  ) : (
-    <>
-      <p>No addresses found. </p>
-      <p>
-        Please <a href="/profile" className="link">add an address</a> before continuing.
-      </p>
-    </>
-  )}
-</div>
+              <h5>Select an address:</h5>
+              {userAddress && userAddress.length > 0 ? (
+                <select
+                  name="address"
+                  onChange={(e) =>
+                    localStorage.setItem("selectedAddress", e.target.value)
+                  }
+                >
+                  <option value="" disabled>
+                    Select an address
+                  </option>
+                  {userAddress.map((address) => (
+                    <option key={address._id} value={address._id}>
+                      {address.street}, {address.city}, {address.state}{" "}
+                      {address.zip}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <p>No addresses found. </p>
+                  <p>
+                    Please{" "}
+                    <a href="/profile" className="link">
+                      add an address
+                    </a>{" "}
+                    before continuing.
+                  </p>
+                </>
+              )}
+            </div>
 
             <div className="mt-2">
               {!clientToken || !userCart?.length ? (

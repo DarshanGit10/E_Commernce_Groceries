@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import '../Address/AddressForm.css';
 const host = process.env.REACT_APP_LOCALHOST;
 
-const EditProfile = ({fetchUserData}) => {
+const EditProfile = ({fetchUserData,userData}) => {
   const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    phoneNumber: userData.phoneNumber,
   });
   const [validationMsg, setValidationMsg] = useState('');
   const [userAdded, setUserAdded] = useState(false); // Add state variable to track whether address was added or not
-  const [showForm, setShowForm] = useState(true);
+  const [showModal, setShowModal] = useState(true);
 
 
   const handleInputChange = (event) => {
@@ -38,12 +38,15 @@ const EditProfile = ({fetchUserData}) => {
       setUser({ firstName: '', lastName: '', phoneNumber: '' });
       setUserAdded(true); 
       fetchUserData()
+      setTimeout(() => {
+        setShowModal(false);
+      }, 1500);
     } else {
       setValidationMsg(resultData.message);
     }
   };
   const handleCancel = () => {
-    setShowForm(false);
+    setShowModal(false);
   };
 
 
@@ -58,23 +61,24 @@ const EditProfile = ({fetchUserData}) => {
   };
   return (
     <>
-    {showForm && (
-    <div className="addAddressContainer">
-    <h4>Update Profile</h4>
-      <div className="addAddress-card"> 
-      {userAdded ? ( 
-        <p>Profile updated successfully.</p>
-      ) : (
-        <div className="address-form">
-          <form onSubmit={handleUserSubmit}>
-            <div className="address-form-group">
-              <div className="address-form-group-left">
-                <div className="form-group">
+       {showModal && (
+  <div className="modal-container">
+    <div className="modal-overlay"></div>
+    <div className="modal-form">
+      <div className="modal-content-form">
+        <h4 className="modal-title">Update Profile</h4>
+        <div className="modal-body">
+          {userAdded ? (
+            <p>Profile Updated successfully.</p>
+          ) : (
+            <div className="address-form">
+              <form onSubmit={handleUserSubmit}>
+              <div className="form-group">
                   <label htmlFor="street">First Name:</label>
                   <input
                     type="text"
                     id="firstName"
-                    className='textCSS'
+                    className="form-control"
                     name="firstName"
                     value={user.firstName}
                     onChange={handleInputChange}
@@ -84,38 +88,55 @@ const EditProfile = ({fetchUserData}) => {
                   <label htmlFor="city">Last Name:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="lastName"
                     name="lastName"
                     value={user.lastName}
                     onChange={handleInputChange}
                   />
                 </div>
-              </div>
-              <div className="address-form-group-right">
                 <div className="form-group">
                   <label htmlFor="state">Phone Number:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="phoneNumber"
                     name="phoneNumber"
                     value={user.phoneNumber}
                     onChange={handleInputChange}
                   />
                 </div>
-                
-              </div>
+
+                <div className="modal-button-group">
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
+                </div>
+                {validationMsg && (
+                  <p className="validation-msg">{validationMsg}</p>
+                )}
+              </form>
             </div>
-          <div className="button-group">
-          <button type="submit" className="btn btn-color-2" >Save</button>
-            <button type="button" className="btn btn-color-2" onClick={handleCancel}>Cancel</button>
-                  <button type="button" className="btn btn-color-2" onClick={handleReset}>Reset</button>
-                  </div>
-            {validationMsg && <p className="validation-msg">{validationMsg}</p>}
-          </form>
-        </div>)}
-      </div></div>    )}
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 };

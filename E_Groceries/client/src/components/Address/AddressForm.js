@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import './AddressForm.css';
+import React, { useState } from "react";
+import "./AddressForm.css";
 const host = process.env.REACT_APP_LOCALHOST;
 
-const AddressForm = ({fetchUserAddress}) => {
+const AddressForm = ({ fetchUserAddress}) => {
   const [address, setAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
   });
-  const [validationMsg, setValidationMsg] = useState('');
-  const [addressAdded, setAddressAdded] = useState(false); // Add state variable to track whether address was added or not
-  const [showForm, setShowForm] = useState(true);
-
+  const [validationMsg, setValidationMsg] = useState("");
+  const [addressAdded, setAddressAdded] = useState(false); 
+  const [showModal, setShowModal] = useState(true);
 
   const handleInputChange = (event) => {
     setAddress({ ...address, [event.target.name]: event.target.value });
@@ -20,12 +19,12 @@ const AddressForm = ({fetchUserAddress}) => {
 
   const handleAddressSubmit = async (event) => {
     event.preventDefault();
-    const token = localStorage.getItem('User:Token');
+    const token = localStorage.getItem("User:Token");
     const response = await fetch(`${host}api/address/addAddress`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authentication-Token': `${token}`,
+        "Content-Type": "application/json",
+        "Authentication-Token": `${token}`,
       },
       body: JSON.stringify({
         street: address.street,
@@ -36,20 +35,21 @@ const AddressForm = ({fetchUserAddress}) => {
     });
     const resultData = await response.json();
     if (resultData.success) {
-      setValidationMsg('Address added successfully.');
-      setAddress({ street: '', city: '', state: '', zipCode: '' });
+      setValidationMsg("Address added successfully.");
+      setAddress({ street: "", city: "", state: "", zipCode: "" });
       setAddressAdded(true); // Set addressAdded state variable to true after successfully adding an address
-      fetchUserAddress()
+      fetchUserAddress();
+      setTimeout(() => {
+        setShowModal(false);
+      }, 1500);
     } else {
       setValidationMsg(resultData.message);
     }
   };
   const handleCancel = () => {
-    setShowForm(false);
+    setShowModal(false);
   };
 
-
-  
   const handleReset = () => {
     // Reset the form data to its initial state when Reset button is clicked
     setAddress({
@@ -63,74 +63,97 @@ const AddressForm = ({fetchUserAddress}) => {
   };
   return (
     <>
-    {showForm && (
-    <div className="addAddressContainer">
-    <h4>Add Address</h4>
-      <div className="addAddress-card"> 
-      {addressAdded ? ( // Conditionally render the form based on the addressAdded state variable
-        <p>Address added successfully.</p>
-      ) : (
-        <div className="address-form">
-          <form onSubmit={handleAddressSubmit}>
-            <div className="address-form-group">
-              <div className="address-form-group-left">
+     {showModal && (
+  <div className="modal-container">
+    <div className="modal-overlay"></div>
+    <div className="modal-form">
+      <div className="modal-content-form">
+        <h4 className="modal-title">Add Address</h4>
+        <div className="modal-body">
+          {addressAdded ? (
+            <p>Address added successfully.</p>
+          ) : (
+            <div className="address-form">
+              <form onSubmit={handleAddressSubmit}>
                 <div className="form-group">
                   <label htmlFor="street">Street:</label>
                   <input
                     type="text"
                     id="street"
-                    className='textCSS'
+                    className="form-control"
                     name="street"
                     value={address.street}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="city">City:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="city"
                     name="city"
                     value={address.city}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
-              </div>
-              <div className="address-form-group-right">
                 <div className="form-group">
                   <label htmlFor="state">State:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="state"
                     name="state"
                     value={address.state}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="zipCode">Zip Code:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="zipCode"
                     name="zipCode"
                     value={address.zipCode}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
-              </div>
+                <div className="modal-button-group">
+                  <button type="submit" className="btn btn-primary">
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
+                </div>
+                {validationMsg && (
+                  <p className="validation-msg">{validationMsg}</p>
+                )}
+              </form>
             </div>
-          <div className="button-group">
-          <button type="submit" className="btn btn-color-2" >Add</button>
-            <button type="button" className="btn btn-color-2" onClick={handleCancel}>Cancel</button>
-                  <button type="button" className="btn btn-color-2" onClick={handleReset}>Reset</button>
-                  </div>
-            {validationMsg && <p className="validation-msg">{validationMsg}</p>}
-          </form>
-        </div>)}
-      </div></div>    )}
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
     </>
   );
 };

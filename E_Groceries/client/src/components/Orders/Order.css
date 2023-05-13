@@ -87,3 +87,95 @@ td {
   text-overflow: ellipsis;
   max-width: 150px;
 }
+
+
+.modal {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 92vh;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  max-width: 650px;
+  width: 90%;
+ position: absolute ;
+ top: 50px;
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.modal-content button {
+  background-color: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-content button:hover {
+  background-color: #ddd;
+}
+
+.cancelOrder{
+  position: absolute;
+  top: 60px;
+  right: 80px;
+    height: 50px;
+    width: 50px;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  
+  .order-info-buyer,
+  .order-info-products,
+  .order-info-shipping-address,
+  .order-info-status,
+  .order-info-created-at,
+  .order-info-updated-at {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .order-info-product-list {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  
+  .order-info-product-list li {
+    margin-bottom: 10px;
+  }
+  
+  .order-info-address {
+    margin-top: 0;
+  }
+  
+  .order-info-address li {
+    margin-bottom: 10px;
+  }
+
+.cancelOrder:hover {
+  opacity: 0.8;
+}

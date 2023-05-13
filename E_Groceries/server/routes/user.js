@@ -59,7 +59,7 @@ router.put("/user/edit_user", FetchUser, async (req, res) => {
       { new: true }
     );
     const html = `
-    <p>Hello,</p>
+    <p>Hello <b>${user.firstName}</b>,</p>
     <p>We sincerely hope that you are doing well. We are writing to inform you that the change to your account information was successful.</p>
     <p>Thank you for choosing our service and we look forward to continuing to provide you with the best experience possible.
     </p>

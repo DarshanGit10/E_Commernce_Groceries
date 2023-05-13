@@ -3,16 +3,16 @@ import './AddressForm.css';
 
 const host = process.env.REACT_APP_LOCALHOST;
 
-const EditAddress = ({fetchUserAddress, addressId}) => {
+const EditAddress = ({fetchUserAddress, addressId,existingAddress}) => {
   const [address, setAddress] = useState({
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
+    street: existingAddress.street,
+    city: existingAddress.city,
+    state: existingAddress.state,
+    zipCode: existingAddress.zipCode,
   });
   const [validationMsg, setValidationMsg] = useState('');
   const [addressEdited, setAddressEdited] = useState(false); // Add state variable to track whether address was added or not
-  const [showForm, setShowForm] = useState(true);
+  const [showModal, setShowModal] = useState(true);
 
 
   const handleInputChange = (event) => {
@@ -41,12 +41,15 @@ const EditAddress = ({fetchUserAddress, addressId}) => {
       setAddress({ street: '', city: '', state: '', zipCode: '' });
       setAddressEdited(true); // Set addressAdded state variable to true after successfully adding an address
       fetchUserAddress()
+      setTimeout(() => {
+        setShowModal(false);
+      }, 1500);
     } else {
       setValidationMsg(resultData.message);
     }
   };
   const handleCancel = () => {
-    setShowForm(false);
+    setShowModal(false);
   };
 
 
@@ -64,74 +67,96 @@ const EditAddress = ({fetchUserAddress, addressId}) => {
   };
   return (
     <>
-    {showForm && (
-    <div className="addAddressContainer">
-    <h4>Update Address</h4>
-      <div className="addAddress-card"> 
-      {addressEdited ? ( // Conditionally render the form based on the addressAdded state variable
-        <p>Address Updated successfully.</p>
-      ) : (
-        <div className="address-form">
-          <form onSubmit={handleAddressSubmit}>
-            <div className="address-form-group">
-              <div className="address-form-group-left">
+       {showModal && (
+  <div className="modal-container">
+    <div className="modal-overlay"></div>
+    <div className="modal-form">
+      <div className="modal-content-form">
+        <h4 className="modal-title">Update Address</h4>
+        <div className="modal-body">
+          {addressEdited ? (
+            <p>Address Updated successfully.</p>
+          ) : (
+            <div className="address-form">
+              <form onSubmit={handleAddressSubmit}>
                 <div className="form-group">
                   <label htmlFor="street">Street:</label>
                   <input
                     type="text"
                     id="street"
-                    className='textCSS'
+                    className="form-control"
                     name="street"
                     value={address.street}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="city">City:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="city"
                     name="city"
                     value={address.city}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
-              </div>
-              <div className="address-form-group-right">
                 <div className="form-group">
                   <label htmlFor="state">State:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="state"
                     name="state"
                     value={address.state}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label htmlFor="zipCode">Zip Code:</label>
                   <input
                     type="text"
-                    className='textCSS'
+                    className="form-control"
                     id="zipCode"
                     name="zipCode"
                     value={address.zipCode}
                     onChange={handleInputChange}
+                    required
                   />
                 </div>
-              </div>
+                <div className="modal-button-group">
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
+                </div>
+                {validationMsg && (
+                  <p className="validation-msg">{validationMsg}</p>
+                )}
+              </form>
             </div>
-          <div className="button-group">
-          <button type="submit" className="btn btn-color-2" >Save</button>
-            <button type="button" className="btn btn-color-2" onClick={handleCancel}>Cancel</button>
-                  <button type="button" className="btn btn-color-2" onClick={handleReset}>Reset</button>
-                  </div>
-            {validationMsg && <p className="validation-msg">{validationMsg}</p>}
-          </form>
-        </div>)}
-      </div></div>    )}
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 };

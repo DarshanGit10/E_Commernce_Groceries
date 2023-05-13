@@ -115,9 +115,9 @@ router.put("/address/editAddress/:id", FetchUser, async (req, res) => {
 
   // Route 4
 // Delete Address DELETE method  - login req
-router.delete("/address/deleteNote/:id", FetchUser, async (req, res) => {
+router.delete("/address/deleteAddress/:id", FetchUser, async (req, res) => {
   try {
-    // Find the note to deleted and delete it
+    // Find the address to deleted and delete it
     let address = await Address.findById(req.params.id);
     if (!address) {
       return res.status(404).send("Address not found");
