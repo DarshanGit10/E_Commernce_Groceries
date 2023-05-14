@@ -40,6 +40,13 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
   try {
     const { nonce, userCart, selectedAddress } = req.body;
     const productIds = userCart.map((i) => i._id);
+    const numberOfQty = userCart.map((i) => i.numberOfQuantity);
+    // console.log(userCart)
+    const productsDB = productIds.map((productId, index) => ({
+      productId,
+      qty: numberOfQty[index],
+    }));
+    // console.log(productsDB)
 
     const products = await Products.find({ _id: { $in: productIds } });
     let total = 0;
@@ -76,7 +83,7 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
 
     if (result.success) {
       const order = new Orders({
-        product: productIds,
+        product: productsDB,
         products: updatedProductDetails,
         payment: result,
         buyer: req.user.id,

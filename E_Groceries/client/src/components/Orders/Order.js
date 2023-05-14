@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./Order.css";
 import Alert from "../Alert";
+import easyinvoice from 'easyinvoice';
+import download from 'downloadjs';
+import { Buffer } from 'buffer';
+
+
+
+
 
 const host = process.env.REACT_APP_LOCALHOST;
 
@@ -13,8 +20,9 @@ const Order = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
 
+
   const selectedOrder = orders.find((order) => order._id === selectedOrderId);
-  // console.log(selectedOrder)
+  console.log(selectedOrder)
 
   const handleViewMore = () => {
     setShowModal(true);
@@ -73,6 +81,86 @@ const Order = () => {
     }
   };
 
+  
+
+
+
+const handleInvoiceDownload = async () => {
+  try {
+    // Ensure that selectedOrder object is defined before using it
+    if (!selectedOrder) {
+      console.error('Error generating invoice: selectedOrder is undefined');
+      return;
+    }
+
+    const invoice = {
+      documentTitle: 'Invoice',
+      currency: 'INR',
+      taxNotation: 'GST',
+      marginTop: 25,
+      marginRight: 25,
+      marginLeft: 25,
+      marginBottom: 25,
+      images: {
+        logo: 'https://github.com/DarshanGit10/E_Commernce_Groceries/blob/master/E_Groceries/client/src/assets/logo1.png?raw=true',
+        
+    },
+
+      sender: {
+        company: 'FreshCo Pantry',
+        address: 'Vijay towers, Vidyanagar Main Road',
+        zip: '583104',
+        city: 'Ballari',
+        country: 'India',
+      },
+      client: {
+        company: selectedOrder.buyer.firstName,
+        address: selectedOrder.shippingAddress.street,
+        zip: selectedOrder.shippingAddress.zipCode,
+        city: selectedOrder.shippingAddress.city,
+        country: selectedOrder.shippingAddress.country,
+      },
+
+      information: {
+        number: `${selectedOrder._id}`,
+        date: new Date().toLocaleDateString(),
+        'due-date': new Date().toLocaleDateString()
+        
+    },
+      invoiceNumber: selectedOrder._id,
+      invoiceDate: new Date().toLocaleDateString('en-IN'),
+      products: selectedOrder.products.map((item) => {
+        const productQty = selectedOrder.product.find(
+          (p) => p.productId === item._id
+        );
+        return {
+          quantity: productQty ? productQty.qty : 0, // use the quantity if found, or 0 otherwise
+          description: item.name,
+          "tax-rate": 0,
+          price: item.price,
+        };
+      }),
+      
+
+      bottomNotice: 'Thank you for your business',
+    };
+
+    const result = await easyinvoice.createInvoice(invoice);
+
+    if (result && result.pdf) {
+      const pdfData = Buffer.from(result.pdf, 'base64');
+      const blob = new Blob([pdfData], { type: 'application/pdf' });
+      download(blob, 'invoice.pdf', 'application/pdf');
+    } else {
+      console.error('Error generating invoice: invalid PDF data');
+    }
+  } catch (error) {
+    console.error('Error generating invoice:', error);
+  }
+};
+
+  
+  
   return (
     <div className="order-container">
       <div className="alertPositionProduct">
@@ -157,6 +245,7 @@ const Order = () => {
         <div className="modal">
           <div className="modal-content">
             <h2>Order Details</h2>
+            <div></div>
             <img
               src={require("../../assets/cancel.png")}
               alt="Cart"
@@ -178,6 +267,27 @@ const Order = () => {
                 handleOrderCancel(selectedOrder._id)
               }
             />
+               <img
+              src={require("../../assets/download.png")}
+              alt="Cart"
+              className="invoiceDownload"
+              style={{
+                cursor:
+                  
+                  selectedOrder.status === "Cancelled"
+                    ? "not-allowed"
+                    : "pointer",
+                opacity:
+                 
+                  selectedOrder.status === "Cancelled"
+                    ? 0.5
+                    : 1,
+              }}
+              onClick={() =>
+                selectedOrder.status !== "Cancelled" &&
+                handleInvoiceDownload(selectedOrder._id)
+              }
+            />
 
             <div className="order-info">
               <p className="order-info-buyer">
@@ -185,35 +295,44 @@ const Order = () => {
               </p>
               <p className="order-info-products">Products:</p>
               <ul className="order-info-product-list">
-                {selectedOrder.products.map((product) => (
-                  <li key={product._id}>
-                    <p>Name: {product.name}</p>
-                    <p>Description: {product.description}</p>
-                    <p>Price: {product.price}/-</p>
-                  </li>
-                ))}
-              </ul>
+  {selectedOrder.products.map((product) => (
+    <li key={product._id}>
+      <p>Name: {product.name}</p>
+      <p>Description: {product.description}</p>
+      <p>Price: {product.price}/-</p>
+      <ul style={{listStyle:'none'}}>
+        {selectedOrder.product.map((productQty) => (
+          productQty.productId === product._id && (
+            <li key={productQty.productId} >
+              <p>Quantity: {productQty.qty}</p>
+            </li>
+          )
+        ))}
+      </ul>
+    </li>
+  ))}
+</ul>
+
               <p className="order-info-shipping-address">Shipping Address:</p>
               <ul className="order-info-address">
                 <li>
-                {selectedOrder.shippingAddress ? (
-  <>
-    <p>Street: {selectedOrder.shippingAddress.street}</p>
-    <p>City: {selectedOrder.shippingAddress.city}</p>
-    <p>State: {selectedOrder.shippingAddress.state}</p>
-    <p>Country: {selectedOrder.shippingAddress.country}</p>
-    <p>ZipCode: {selectedOrder.shippingAddress.zipCode}</p>
-  </>
-) : (
-  <>
-    <p>Street: null</p>
-    <p>City: null</p>
-    <p>State: null</p>
-    <p>Country: null</p>
-    <p>ZipCode: null</p>
-  </>
-)}
-
+                  {selectedOrder.shippingAddress ? (
+                    <>
+                      <p>Street: {selectedOrder.shippingAddress.street}</p>
+                      <p>City: {selectedOrder.shippingAddress.city}</p>
+                      <p>State: {selectedOrder.shippingAddress.state}</p>
+                      <p>Country: {selectedOrder.shippingAddress.country}</p>
+                      <p>ZipCode: {selectedOrder.shippingAddress.zipCode}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>Street: null</p>
+                      <p>City: null</p>
+                      <p>State: null</p>
+                      <p>Country: null</p>
+                      <p>ZipCode: null</p>
+                    </>
+                  )}
                 </li>
               </ul>
               <p className="order-info-status">

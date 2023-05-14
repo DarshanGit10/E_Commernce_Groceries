@@ -144,7 +144,7 @@ td {
   right: 80px;
     height: 50px;
     width: 50px;
-    transition: opacity 0.2s ease-in-out;
+   
   }
 
   
@@ -178,4 +178,13 @@ td {
 
 .cancelOrder:hover {
   opacity: 0.8;
+}
+
+
+.invoiceDownload{
+  position: absolute;
+  top: 60px;
+  right: 160px;
+    height: 50px;
+    width: 50px;
 }

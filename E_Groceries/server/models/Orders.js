@@ -13,7 +13,8 @@ const ordersSchema = new mongoose.Schema({
     enum: ['Not Process', 'Processing', 'Shipped', 'Delivered']
   },
   product: [{
-    type: String
+    productId: String,
+    qty: Number,
   }],
   products: [{
     type: mongoose.Schema.Types.ObjectId,
