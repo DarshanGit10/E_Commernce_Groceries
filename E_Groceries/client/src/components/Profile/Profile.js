@@ -206,7 +206,7 @@ const Profile = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6">No addresses found</td>
+                    <td colSpan="7">No addresses found</td>
                   </tr>
                 )}
               </tbody>
