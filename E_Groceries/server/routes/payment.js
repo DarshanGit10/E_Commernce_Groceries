@@ -5,9 +5,9 @@ const router = express.Router();
 const Products = require('../models/Products')
 const Orders = require("../models/Orders");
 const FetchUser = require("../Middleware/FetchUser");
-const sendMail = require("../utils/sendMail")
+// const sendMail = require("../utils/sendMail")
 const User = require("../models/Users");
-
+const ses = require("../utils/ses")
 
 
 var gateway = new brainTree.BraintreeGateway({
@@ -107,7 +107,7 @@ router.post("/brainTree/payment", FetchUser, async (req, res) => {
         <p>Happy Shopping!!!</p>
       `;
     
-      await sendMail(userEmail, `Order Confirmation - ${orderId}`, html);
+      await ses(userEmail, `Order Confirmation - ${orderId}`, html);
     
     
 

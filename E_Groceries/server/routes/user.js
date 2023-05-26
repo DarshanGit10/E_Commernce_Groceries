@@ -2,6 +2,7 @@ const User = require("../models/Users");
 const express = require("express");
 const router = express.Router();
 const FetchUser = require('../Middleware/FetchUser')
+const ses = require("../utils/ses")
 
 const sendMail = require("../utils/sendMail")
 require('dotenv').config();
@@ -68,7 +69,7 @@ router.put("/user/edit_user", FetchUser, async (req, res) => {
     <p>Happy Shopping!!!</p>
   `;
   // console.log(html)
-        await sendMail(user.email, "Your Account Information Has Been Updated", html)
+        await ses(user.email, "Your Account Information Has Been Updated", html)
     res.json({success:true,  message: "User details updated successfully" });
   } catch (error) {
     console.error(error);

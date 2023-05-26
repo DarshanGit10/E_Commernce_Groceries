@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const Token = require("../models/Token");
-const sendMail = require("../utils/sendMail")
+// const sendMail = require("../utils/sendMail")
+const ses = require("../utils/ses")
 const crypto  = require('crypto')
 require('dotenv').config();
 
@@ -85,7 +86,8 @@ router.post(
   <p>Happy Shopping!!!</p>
 `;
 // console.log(html)
-      await sendMail(user.email, "Action Required: Verify Your Account Information", html)
+      // await sendMail(user.email, "Action Required: Verify Your Account Information", html)
+      await ses(user.email,"Action Required: Verify Your Account Information", html)
 
       const response = {
         success: true,
@@ -177,7 +179,7 @@ router.post(
             token: crypto.randomBytes(32).toString("hex"),
           }).save();
           const url = `${process.env.BASE_URL}users/${user.id}/verify/${token.token}`;
-          await sendMail(user.email, "Action Required: Verify Your Account Information", url);
+          await ses(user.email, "Action Required: Verify Your Account Information", url);
         }
   
         return res
